@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="/styles.css?v=8">
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <div class="sticky-cta" aria-label="Quick actions">
   <a href="tel:+15015004306" class="btn btn-outline-light btn-block sticky-call-btn">Call</a>
@@ -38,7 +39,10 @@
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
     <a href="/" class="logo" aria-label="Tuff Bros Mobile Detailing — home">
-      <img src="/logo-badge.png" srcset="/logo-badge.png 512w, /logo-badge@2x.png 800w" sizes="52px" alt="Tuff Bros Mobile Detailing" class="logo-img" width="512" height="512">
+      <picture>
+        <source srcset="/logo-badge.webp 512w, /logo-badge@2x.webp 800w" sizes="52px" type="image/webp">
+        <img src="/logo-badge.png" srcset="/logo-badge.png 512w, /logo-badge@2x.png 800w" sizes="52px" alt="Tuff Bros Mobile Detailing" class="logo-img" width="512" height="512">
+      </picture>
     </a>
     <nav class="main-nav" id="mainNav" aria-label="Primary">
       <a href="/#services">Services</a>
@@ -59,7 +63,7 @@
   </div>
 </header>
 
-<main>
+<main id="main-content">
   <section class="page-hero privacy-hero">
     <div class="container">
       <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">/</span><span aria-current="page">Privacy Policy</span></nav>
@@ -105,7 +109,10 @@
   <div class="container footer-grid">
     <div class="footer-brand">
       <a href="/" class="logo logo-footer" aria-label="Tuff Bros Mobile Detailing — home">
-        <img src="/logo-badge.png" srcset="/logo-badge.png 512w, /logo-badge@2x.png 800w" sizes="96px" alt="Tuff Bros Mobile Detailing" width="512" height="512">
+        <picture>
+          <source srcset="/logo-badge.webp 512w, /logo-badge@2x.webp 800w" sizes="96px" type="image/webp">
+          <img src="/logo-badge.png" srcset="/logo-badge.png 512w, /logo-badge@2x.png 800w" sizes="96px" alt="Tuff Bros Mobile Detailing" width="512" height="512">
+        </picture>
       </a>
       <p>Professional mobile car detailing brought right to your driveway across the greater Little Rock area. Pro detailing experience since 2017.</p>
     </div>

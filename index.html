@@ -40,7 +40,7 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "AutoDetailing",
+  "@type": "AutomotiveBusiness",
   "@id": "https://tuffbrosdetailing.com/#business",
   "url": "https://tuffbrosdetailing.com/",
   "image": "https://tuffbrosdetailing.com/og-image.jpg",
@@ -141,6 +141,7 @@
 </script>
 </head>
 <body id="top">
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <!-- Sticky mobile CTA bar -->
 <div class="sticky-cta" aria-label="Quick actions">
@@ -154,7 +155,10 @@
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
     <a href="#top" class="logo" aria-label="Tuff Bros Mobile Detailing — home">
-      <img src="logo-badge@2x.png" srcset="logo-badge.png 512w, logo-badge@2x.png 800w" sizes="62px" alt="Tuff Bros Mobile Detailing" class="logo-img" width="512" height="512">
+      <picture>
+        <source srcset="logo-badge.webp 512w, logo-badge@2x.webp 800w" sizes="62px" type="image/webp">
+        <img src="logo-badge@2x.png" srcset="logo-badge.png 512w, logo-badge@2x.png 800w" sizes="62px" alt="Tuff Bros Mobile Detailing" class="logo-img" width="512" height="512">
+      </picture>
     </a>
 
     <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -181,7 +185,7 @@
   </div>
 </header>
 
-<main>
+<main id="main-content">
 
 <!-- 1. Hero -->
 <section class="hero">
@@ -208,7 +212,10 @@
       </ul>
     </div>
     <div class="hero-media">
-      <img src="work-camaro.jpg" sizes="(max-width: 860px) 92vw, 46vw" alt="Freshly detailed red Chevrolet Camaro ZL1 gleaming in a driveway during a mobile detail" width="1400" height="1050" fetchpriority="high">
+      <picture>
+        <source srcset="work-camaro.webp" type="image/webp">
+        <img src="work-camaro.jpg" sizes="(max-width: 860px) 92vw, 46vw" alt="Freshly detailed red Chevrolet Camaro ZL1 gleaming in a driveway during a mobile detail" width="1400" height="1050" fetchpriority="high">
+      </picture>
       <div class="hero-badge">
         <span class="hero-badge-score">5.0</span>
         <span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
@@ -354,7 +361,10 @@
 <section class="ceramic reveal" id="ceramic">
   <div class="container ceramic-grid">
     <div class="ceramic-media">
-      <img src="porsche-ceramic.jpg" alt="Gray Porsche 911 Turbo S with a deep, glossy ceramic-coated finish in a driveway" width="1400" height="1050">
+      <picture>
+        <source srcset="porsche-ceramic.webp" type="image/webp">
+        <img src="porsche-ceramic.jpg" alt="Gray Porsche 911 Turbo S with a deep, glossy ceramic-coated finish in a driveway" width="1400" height="1050">
+      </picture>
     </div>
     <div class="ceramic-copy">
       <p class="eyebrow gold">
@@ -382,27 +392,45 @@
     <h2 class="section-title">Recent Work</h2>
     <div class="gallery-grid">
       <figure class="gallery-item">
-        <img src="work-camaro.jpg" alt="Glossy red Chevrolet Camaro after a full exterior detail" loading="lazy" width="1400" height="1050">
+        <picture>
+          <source srcset="work-camaro.webp" type="image/webp">
+          <img src="work-camaro.jpg" alt="Glossy red Chevrolet Camaro after a full exterior detail" loading="lazy" width="1400" height="1050">
+        </picture>
         <figcaption>Sports Car Detail</figcaption>
       </figure>
       <figure class="gallery-item">
-        <img src="work-suv.jpg" alt="Black Infiniti QX80 SUV detailed to a deep shine" loading="lazy" width="1400" height="1050">
+        <picture>
+          <source srcset="work-suv.webp" type="image/webp">
+          <img src="work-suv.jpg" alt="Black Infiniti QX80 SUV detailed to a deep shine" loading="lazy" width="1400" height="1050">
+        </picture>
         <figcaption>Luxury SUV Detail</figcaption>
       </figure>
       <figure class="gallery-item">
-        <img src="work-truck.jpg" alt="GMC Sierra Denali truck after a full detail" loading="lazy" width="1400" height="1050">
+        <picture>
+          <source srcset="work-truck.webp" type="image/webp">
+          <img src="work-truck.jpg" alt="GMC Sierra Denali truck after a full detail" loading="lazy" width="1400" height="1050">
+        </picture>
         <figcaption>Truck Detail</figcaption>
       </figure>
       <figure class="gallery-item">
-        <img src="work-foam.jpg" alt="White Audi sedan covered in thick snow foam during a wash" loading="lazy" width="1400" height="1050">
+        <picture>
+          <source srcset="work-foam.webp" type="image/webp">
+          <img src="work-foam.jpg" alt="White Audi sedan covered in thick snow foam during a wash" loading="lazy" width="1400" height="1050">
+        </picture>
         <figcaption>Foam Wash</figcaption>
       </figure>
       <figure class="gallery-item">
-        <img src="work-motorcycle.jpg" alt="Black Harley-Davidson touring motorcycle detailed and shining" loading="lazy" width="1400" height="1050">
+        <picture>
+          <source srcset="work-motorcycle.webp" type="image/webp">
+          <img src="work-motorcycle.jpg" alt="Black Harley-Davidson touring motorcycle detailed and shining" loading="lazy" width="1400" height="1050">
+        </picture>
         <figcaption>Motorcycle Detail</figcaption>
       </figure>
       <figure class="gallery-item">
-        <img src="work-boat.jpg" alt="Green speed boat cleaned and detailed on its trailer" loading="lazy" width="1400" height="1050">
+        <picture>
+          <source srcset="work-boat.webp" type="image/webp">
+          <img src="work-boat.jpg" alt="Green speed boat cleaned and detailed on its trailer" loading="lazy" width="1400" height="1050">
+        </picture>
         <figcaption>Boat Detail</figcaption>
       </figure>
     </div>
@@ -418,8 +446,14 @@
     <div class="ba-grid">
       <figure class="ba">
         <div class="ba-slider">
-          <img class="ba-img ba-after" src="engine-after.jpg" alt="Engine bay after detailing — clean with dressed, restored plastics" width="1024" height="768" loading="lazy">
-          <img class="ba-img ba-before" src="engine-before.jpg" alt="Engine bay before detailing — covered in dust and grime" width="1024" height="768" loading="lazy">
+          <picture>
+            <source srcset="engine-after.webp" type="image/webp">
+            <img class="ba-img ba-after" src="engine-after.jpg" alt="Engine bay after detailing — clean with dressed, restored plastics" width="1024" height="768" loading="lazy">
+          </picture>
+          <picture>
+            <source srcset="engine-before.webp" type="image/webp">
+            <img class="ba-img ba-before" src="engine-before.jpg" alt="Engine bay before detailing — covered in dust and grime" width="1024" height="768" loading="lazy">
+          </picture>
           <div class="ba-divider" aria-hidden="true"><span class="ba-knob"></span></div>
           <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
           <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
@@ -429,8 +463,14 @@
       </figure>
       <figure class="ba">
         <div class="ba-slider">
-          <img class="ba-img ba-after" src="headlight-after.jpg" alt="Headlight after restoration — clear and crystal clean" width="1024" height="768" loading="lazy">
-          <img class="ba-img ba-before" src="headlight-before.jpg" alt="Headlight before restoration — foggy, hazy, and oxidized" width="1024" height="768" loading="lazy">
+          <picture>
+            <source srcset="headlight-after.webp" type="image/webp">
+            <img class="ba-img ba-after" src="headlight-after.jpg" alt="Headlight after restoration — clear and crystal clean" width="1024" height="768" loading="lazy">
+          </picture>
+          <picture>
+            <source srcset="headlight-before.webp" type="image/webp">
+            <img class="ba-img ba-before" src="headlight-before.jpg" alt="Headlight before restoration — foggy, hazy, and oxidized" width="1024" height="768" loading="lazy">
+          </picture>
           <div class="ba-divider" aria-hidden="true"><span class="ba-knob"></span></div>
           <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
           <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
@@ -643,9 +683,9 @@
             </select>
           </div>
           <div class="form-row">
-            <label for="condition">Vehicle Condition <span class="req" aria-hidden="true">*</span></label>
-            <select id="condition" name="condition" required>
-              <option value="">Select condition</option>
+            <label for="condition">Vehicle Condition <span class="optional">(optional)</span></label>
+            <select id="condition" name="condition">
+              <option value="">Select condition (optional)</option>
               <option>Lightly Dirty</option>
               <option>Moderately Dirty</option>
               <option>Heavily Soiled / Neglected</option>
@@ -743,7 +783,10 @@
   <div class="container footer-grid">
     <div class="footer-brand">
       <a href="#top" class="logo logo-footer" aria-label="Tuff Bros Mobile Detailing — home">
-        <img src="logo-badge.png" srcset="logo-badge.png 512w, logo-badge@2x.png 800w" sizes="96px" alt="Tuff Bros Mobile Detailing" width="512" height="512">
+        <picture>
+          <source srcset="logo-badge.webp 512w, logo-badge@2x.webp 800w" sizes="96px" type="image/webp">
+          <img src="logo-badge.png" srcset="logo-badge.png 512w, logo-badge@2x.png 800w" sizes="96px" alt="Tuff Bros Mobile Detailing" width="512" height="512">
+        </picture>
       </a>
       <p>Professional mobile car detailing brought right to your driveway across the greater Little Rock area. Pro detailing experience since 2017.</p>
       <div class="footer-social">
