@@ -1197,6 +1197,14 @@ section[id], body > #top { scroll-margin-top: 84px; }
   padding: 18px 0;
 }
 .footer-bottom p { margin: 0; font-size: .85rem; text-align: center; }
+.footer-legal {
+  display: inline-block;
+  margin-left: .7rem;
+  padding-left: .7rem;
+  border-left: 1px solid var(--line-2);
+}
+.footer-legal a { color: var(--on-dark-mut); text-decoration: none; }
+.footer-legal a:hover { color: var(--gold); }
 
 /* =========================================================
    Focus & motion
@@ -1368,6 +1376,34 @@ summary:focus-visible {
 }
 .breadcrumbs a { color: var(--on-dark-mut); text-decoration: none; }
 .breadcrumbs a:hover { color: var(--cream); }
+
+/* =========================================================
+   Privacy policy
+   ========================================================= */
+.privacy-hero { padding-bottom: 48px; }
+.privacy-policy {
+  background: var(--paper-light);
+  color: var(--ink-text);
+  padding: clamp(54px, 8vw, 96px) 0;
+}
+.privacy-layout {
+  max-width: 820px;
+}
+.privacy-layout h2 {
+  color: var(--ink-text);
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  text-transform: uppercase;
+  margin: 2.1rem 0 .55rem;
+}
+.privacy-layout p { color: var(--ink-muted); }
+.privacy-layout a { color: #a4171c; font-weight: 600; }
+.privacy-updated {
+  color: var(--ink-muted);
+  font-size: .92rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
 .breadcrumbs .sep { margin: 0 7px; }
 .page-hero h1 {
   font-size: clamp(2.1rem, 4.8vw, 3.3rem);
