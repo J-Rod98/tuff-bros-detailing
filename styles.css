@@ -1550,5 +1550,40 @@ summary:focus-visible {
   margin: 6px 0 20px;
 }
 
+/* Fleet-detailing proof gallery */
+.fleet-photo-grid {
+  max-width: var(--maxw);
+  margin: 30px auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr);
+  gap: 24px;
+  align-items: start;
+}
+.fleet-photo-card {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-light);
+  border-radius: var(--radius);
+  background: var(--paper-light);
+  box-shadow: var(--shadow-sm);
+}
+.fleet-photo-card img { width: 100%; height: auto; }
+.fleet-photo-card figcaption {
+  padding: 14px 16px;
+  color: var(--ink-text);
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-align: center;
+}
+.fleet-photo-card--portrait { max-width: 440px; justify-self: center; }
+.fleet-photo-card--feature { grid-column: 1 / -1; width: 100%; max-width: 760px; justify-self: center; }
+@media (max-width: 680px) {
+  .fleet-photo-grid { grid-template-columns: 1fr; }
+  .fleet-photo-card--portrait { max-width: 520px; }
+  .fleet-photo-card--feature { grid-column: auto; }
+}
+
 /* Single before/after slider centered inside prose */
 .prose .ba-slider { margin: 6px 0 20px; }
