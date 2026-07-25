@@ -635,6 +635,13 @@
         <!-- Spam honeypot: hidden from humans, bots fill it and get rejected by Formspree -->
         <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="_subject" value="New quote request — Tuff Bros website">
+        <!-- Attribution fields are populated in script.js. They go to the lead inbox, never to Analytics. -->
+        <input type="hidden" name="landing_page" id="landingPage">
+        <input type="hidden" name="utm_source" id="utmSource">
+        <input type="hidden" name="utm_medium" id="utmMedium">
+        <input type="hidden" name="utm_campaign" id="utmCampaign">
+        <input type="hidden" name="utm_content" id="utmContent">
+        <input type="hidden" name="referrer_host" id="referrerHost">
         <div class="form-grid">
           <div class="form-row">
             <label for="name">Name <span class="req" aria-hidden="true">*</span></label>
