@@ -1,4 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
+  // ---- Meta Pixel: anonymous page and completed-quote measurement ----
+  // Do not send quote-form fields or other personally identifiable information.
+  (function (f, b, e, v, n, t, s) {
+    if (f.fbq) return;
+    n = f.fbq = function () {
+      n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+    };
+    if (!f._fbq) f._fbq = n;
+    n.push = n;
+    n.loaded = true;
+    n.version = '2.0';
+    n.queue = [];
+    t = b.createElement(e);
+    t.async = true;
+    t.src = v;
+    s = b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t, s);
+  })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+  window.fbq('init', '1360494595482934');
+  window.fbq('track', 'PageView');
+
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
@@ -161,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (response) {
         if (response.ok) {
           trackEvent('generate_lead', { form_id: 'quoteForm' });
+          if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
           form.reset();
           confirmation.hidden = false;
           confirmation.scrollIntoView({ behavior: 'smooth', block: 'center' });
