@@ -52,6 +52,7 @@ const state = {
 
 function track(name, params = {}) {
   if (typeof window.gtag === 'function') window.gtag('event', name, params);
+  if (typeof window.fbq === 'function') window.fbq('trackCustom', name, params);
 }
 
 function readAttribution() {

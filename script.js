@@ -1,4 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
+  // ---- Meta Pixel: anonymous page and completed-quote measurement ----
+  // Do not send quote-form fields or other personally identifiable information.
+  (function (f, b, e, v, n, t, s) {
+    if (f.fbq) return;
+    n = f.fbq = function () {
+      n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+    };
+    if (!f._fbq) f._fbq = n;
+    n.push = n;
+    n.loaded = true;
+    n.version = '2.0';
+    n.queue = [];
+    t = b.createElement(e);
+    t.async = true;
+    t.src = v;
+    s = b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t, s);
+  })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+  window.fbq('init', '1360494595482934');
+  window.fbq('track', 'PageView');
+
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
@@ -110,6 +132,51 @@ document.addEventListener('DOMContentLoaded', function () {
   var confirmation = document.getElementById('formConfirmation');
   var errorEl = document.getElementById('formError');
   var submitBtn = document.getElementById('submitBtn');
+
+  // ---- Preserve campaign attribution with the lead, not in Analytics ----
+  // UTMs may disappear if a visitor browses to another page before requesting
+  // a quote, so keep the first non-empty values for the current browser session.
+  var attributionKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+  var attribution = {};
+  try {
+    attribution = JSON.parse(window.sessionStorage.getItem('tuffBrosAttribution') || '{}');
+  } catch (e) {
+    attribution = {};
+  }
+
+  var query = new URLSearchParams(window.location.search);
+  attributionKeys.forEach(function (key) {
+    var value = query.get(key);
+    if (value && !attribution[key]) attribution[key] = value.slice(0, 150);
+  });
+  if (!attribution.landing_page) attribution.landing_page = window.location.pathname;
+
+  try {
+    window.sessionStorage.setItem('tuffBrosAttribution', JSON.stringify(attribution));
+  } catch (e) {
+    // Private browsing or storage restrictions should never block a quote request.
+  }
+
+  function setHiddenField(id, value) {
+    var field = document.getElementById(id);
+    if (field) field.value = value || 'not_set';
+  }
+
+  setHiddenField('landingPage', attribution.landing_page);
+  setHiddenField('utmSource', attribution.utm_source);
+  setHiddenField('utmMedium', attribution.utm_medium);
+  setHiddenField('utmCampaign', attribution.utm_campaign);
+  setHiddenField('utmContent', attribution.utm_content);
+
+  var referrerHost = 'direct_or_unknown';
+  try {
+    if (document.referrer) referrerHost = new URL(document.referrer).hostname;
+  } catch (e) {
+    // Keep the neutral fallback if the browser provides a non-standard referrer.
+  }
+
+  // Service and location pages still store attribution for a later visit to
+  // the home-page quote form, but they do not have fields to populate.
   if (!form) return;
 
   // If the booking flow determined that this vehicle needs a custom quote, carry
@@ -149,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // Existing quote form remains fully usable if stored context cannot be read.
     }
   })();
+  setHiddenField('referrerHost', referrerHost);
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -173,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (response) {
         if (response.ok) {
           trackEvent('generate_lead', { form_id: 'quoteForm' });
+          if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
           form.reset();
           confirmation.hidden = false;
           confirmation.scrollIntoView({ behavior: 'smooth', block: 'center' });
