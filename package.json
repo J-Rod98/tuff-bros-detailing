@@ -1,0 +1,14 @@
+{
+  "name": "tuff-bros-detailing",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/**/*.test.mjs",
+    "check": "node --check booking-config.js && node --check book/booking.js && for file in netlify/functions/*.mjs netlify/functions/lib/*.mjs; do node --check \"$file\"; done"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.1.0",
+    "@netlify/functions": "^5.3.0"
+  }
+}

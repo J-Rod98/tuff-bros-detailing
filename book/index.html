@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request a Mobile Detailing Appointment | Tuff Bros</title>
+<meta name="description" content="Request a preferred mobile detailing appointment with Tuff Bros. Choose a standard service, share vehicle details and photos, and we'll review everything before confirming.">
+<meta name="robots" content="index,follow">
+<link rel="icon" type="image/png" href="/favicon-96.png">
+<link rel="canonical" href="https://tuffbrosdetailing.com/book/">
+<meta property="og:title" content="Request a Mobile Detailing Appointment | Tuff Bros">
+<meta property="og:description" content="Choose a preferred appointment for a standard detailing service. Every request is reviewed before confirmation.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tuffbrosdetailing.com/book/">
+<meta property="og:image" content="https://tuffbrosdetailing.com/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tuffbrosdetailing.com/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Google Analytics 4 (Measurement ID: G-30PYXCXW4W) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-30PYXCXW4W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-30PYXCXW4W');
+</script>
+
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/book/booking.css?v=2">
+</head>
+<body class="booking-page">
+<a class="skip-link" href="#main-content">Skip to booking</a>
+
+<header class="site-header booking-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="Tuff Bros Mobile Detailing — home">
+      <picture>
+        <source srcset="/logo-badge.webp 512w, /logo-badge@2x.webp 800w" sizes="52px" type="image/webp">
+        <img src="/logo-badge.png" srcset="/logo-badge.png 512w, /logo-badge@2x.png 800w" sizes="52px" alt="Tuff Bros Mobile Detailing" class="logo-img" width="512" height="512">
+      </picture>
+    </a>
+    <nav class="booking-nav" aria-label="Booking navigation">
+      <a href="/">Home</a>
+      <a href="/#quote">Get a Custom Quote</a>
+      <a href="tel:+15015004306" data-analytics-event="call_click" data-analytics-location="booking_header">Call (501) 500-4306</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content">
+  <section class="booking-shell">
+    <div class="booking-intro">
+      <p class="booking-kicker">Standard service reservation request</p>
+      <h1>Request your preferred appointment.</h1>
+      <p>Choose a standard service, share a few details and photos, and we’ll review everything before confirming. Nothing is officially booked until Tuff Bros confirms it.</p>
+      <p class="booking-fast-path">Need a deep clean, ceramic coating, paint work, fleet service, or help deciding? <a href="/#quote" data-analytics-event="quote_redirected" data-analytics-location="booking_intro">Get a custom quote instead.</a></p>
+    </div>
+
+    <div class="booking-card" id="bookingApp">
+      <div class="booking-progress-wrap">
+        <div class="booking-progress-copy">
+          <span id="bookingStepLabel">Step 1 of 8</span>
+          <strong id="bookingStepTitle">Choose Service</strong>
+        </div>
+        <ol class="booking-progress" aria-label="Booking progress">
+          <li class="is-current" aria-current="step"><span>1</span><em>Service</em></li>
+          <li><span>2</span><em>Vehicle</em></li>
+          <li><span>3</span><em>Details</em></li>
+          <li><span>4</span><em>Condition</em></li>
+          <li><span>5</span><em>Photos</em></li>
+          <li><span>6</span><em>Address</em></li>
+          <li><span>7</span><em>Time</em></li>
+          <li><span>8</span><em>Review</em></li>
+        </ol>
+      </div>
+
+      <div id="bookingNotice" class="booking-notice" role="status" aria-live="polite" hidden></div>
+      <form id="bookingForm" novalidate>
+        <div id="bookingStep" class="booking-step" aria-live="polite"></div>
+        <div class="booking-actions" id="bookingActions"></div>
+      </form>
+    </div>
+
+    <aside class="booking-assurance" aria-label="Booking request assurance">
+      <div><strong>Request, not confirmation</strong><span>Every appointment is personally reviewed first.</span></div>
+      <div><strong>Fair, protected pricing</strong><span>Condition and add-ons are reviewed before any final price.</span></div>
+      <div><strong>Mobile service</strong><span>We’ll confirm access, location, and your preferred arrival window.</span></div>
+    </aside>
+  </section>
+</main>
+
+<footer class="booking-footer">
+  <div class="container">
+    <p>Prefer to talk it through? Call or text <a href="tel:+15015004306" data-analytics-event="call_click" data-analytics-location="booking_footer">(501) 500-4306</a>.</p>
+    <p><a href="/privacy/">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/terms/">Booking Terms</a> <span aria-hidden="true">·</span> <a href="/#quote">Get a Custom Quote</a></p>
+  </div>
+</footer>
+
+<script type="module" src="/book/booking.js"></script>
+</body>
+</html>

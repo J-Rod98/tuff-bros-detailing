@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('a[href^="tel:"]').forEach(function (link) {
     link.addEventListener('click', function () {
       trackEvent('phone_call_click', { link_location: link.className || 'link' });
+      trackEvent('call_click', { link_location: link.className || 'link' });
     });
   });
 
@@ -65,6 +66,26 @@ document.addEventListener('DOMContentLoaded', function () {
       trackEvent('text_click', { link_location: link.className || 'link' });
     });
   });
+
+  // ---- Preserve paid-traffic attribution when a visitor chooses the booking flow ----
+  (function decorateBookingLinks() {
+    var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'];
+    var current = new URLSearchParams(window.location.search);
+    var attribution = new URLSearchParams();
+    keys.forEach(function (key) {
+      var value = current.get(key) || sessionStorage.getItem('tuffbros_' + key);
+      if (value) {
+        attribution.set(key, value);
+        sessionStorage.setItem('tuffbros_' + key, value);
+      }
+    });
+    if (!attribution.toString()) return;
+    document.querySelectorAll('[data-booking-link]').forEach(function (link) {
+      var url = new URL(link.getAttribute('href'), window.location.origin);
+      attribution.forEach(function (value, key) { url.searchParams.set(key, value); });
+      link.setAttribute('href', url.pathname + '?' + url.searchParams.toString() + url.hash);
+    });
+  })();
 
   // ---- Subtle scroll reveal (degrades gracefully; respects reduced motion) ----
   var reveals = document.querySelectorAll('.reveal');
@@ -90,6 +111,44 @@ document.addEventListener('DOMContentLoaded', function () {
   var errorEl = document.getElementById('formError');
   var submitBtn = document.getElementById('submitBtn');
   if (!form) return;
+
+  // If the booking flow determined that this vehicle needs a custom quote, carry
+  // the non-sensitive context into the existing Formspree workflow. Photos are
+  // intentionally not copied to browser storage.
+  (function restoreBookingQuoteContext() {
+    var raw;
+    try { raw = sessionStorage.getItem('tuffbros_booking_quote_context'); } catch (_) { return; }
+    if (!raw) return;
+    try {
+      var context = JSON.parse(raw);
+      var customer = context.customer || {};
+      var vehicle = context.vehicle || {};
+      var conditions = context.conditions || {};
+      var address = context.address || {};
+      var name = document.getElementById('name');
+      var phone = document.getElementById('phone');
+      var email = document.getElementById('email');
+      var city = document.getElementById('city');
+      var vehicleInput = document.getElementById('vehicle');
+      var service = document.getElementById('service');
+      var condition = document.getElementById('condition');
+      var message = document.getElementById('message');
+      if (name && !name.value) name.value = [customer.firstName, customer.lastName].filter(Boolean).join(' ');
+      if (phone && !phone.value) phone.value = customer.phone || '';
+      if (email && !email.value) email.value = customer.email || '';
+      if (city && address.city && Array.prototype.some.call(city.options, function (option) { return option.value === address.city; })) city.value = address.city;
+      if (vehicleInput && !vehicleInput.value) vehicleInput.value = [vehicle.year, vehicle.make, vehicle.model, vehicle.color].filter(Boolean).join(' ');
+      if (service) service.value = 'Not Sure / Need Help Deciding';
+      if (condition && Object.keys(conditions).some(function (key) { return conditions[key]; })) condition.value = 'Heavily Soiled / Neglected';
+      if (message && !message.value) {
+        var flagged = Object.keys(conditions).filter(function (key) { return conditions[key]; }).join(', ');
+        message.value = ['Booking flow requested a custom quote.', vehicle.notes, flagged ? 'Reported conditions: ' + flagged : ''].filter(Boolean).join('\n');
+      }
+      sessionStorage.removeItem('tuffbros_booking_quote_context');
+    } catch (_) {
+      // Existing quote form remains fully usable if stored context cannot be read.
+    }
+  })();
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
