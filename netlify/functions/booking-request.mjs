@@ -10,11 +10,12 @@ import {
   money
 } from '../../booking-config.js';
 import { bookingCanAcceptRequests, isBookableDate, slotKey } from './booking-availability.mjs';
-import { attachBookingPhotos, addBookingNote, createJobberBookingRequest, findOrCreateBookingClient } from './lib/jobber-bookings.mjs';
-import { bookingStore, json, takeRateLimit, validPhotoType, verifyBookingSession } from './lib/booking-security.mjs';
+import { addBookingNote, createJobberBookingRequest, findOrCreateBookingClient } from './lib/jobber-bookings.mjs';
+import { bookingStore, json, randomToken, takeRateLimit, validPhotoType, verifyBookingSession } from './lib/booking-security.mjs';
 
 const REQUIRED_PHOTO_TYPES = BOOKING_CONFIG.requiredPhotoTypes.filter((photo) => photo.required).map((photo) => photo.id);
 const MAX_BODY_BYTES = 80_000;
+const PHOTO_REVIEW_WINDOW_MS = 30 * 24 * 60 * 60 * 1_000;
 
 function requestNumber() {
   return `TB-${new Date().toISOString().slice(0, 10).replaceAll('-', '')}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
@@ -116,28 +117,6 @@ function normalizePayload(input) {
   };
 }
 
-async function loadPhotos(photos, sessionId) {
-  const store = bookingStore('booking-photos');
-  const resolved = [];
-  for (const photo of photos) {
-    const stored = await store.getWithMetadata(photo.id, { type: 'arrayBuffer', consistency: 'strong' });
-    const metadata = stored?.metadata || {};
-    if (!stored || metadata.sessionId !== sessionId || metadata.photoType !== photo.photoType || !metadata.mime) {
-      throw new Error('One of your photo uploads expired. Please refresh and upload the photos again.');
-    }
-    const extension = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic' }[metadata.mime];
-    if (!extension) throw new Error('One of your photos has an unsupported format.');
-    resolved.push({
-      id: photo.id,
-      photoType: photo.photoType,
-      bytes: stored.data,
-      mime: metadata.mime,
-      filename: `tuff-bros-${photo.photoType}.${extension}`
-    });
-  }
-  return resolved;
-}
-
 async function reserveSlot({ date, window, requestId }) {
   const store = bookingStore('booking-holds');
   const key = slotKey(date, window);
@@ -182,7 +161,7 @@ function bookingInstructions(payload, evaluation, requestId) {
     `Preferred appointment: ${payload.appointment.date}, ${arrival?.label || 'Morning'} arrival window only — do not promise an exact time.`,
     selectedAddOns.length ? `Requested add-ons (not approved or charged): ${selectedAddOns.map((addOn) => `${addOn.label} starts at ${money(addOn.price)}`).join('; ')}.` : '',
     payload.vehicle.notes ? `Customer notes: ${payload.vehicle.notes}` : '',
-    `Photos: ${payload.photos.length} secure vehicle photos will be attached to this request.`,
+    `Photos: ${payload.photos.length} secure vehicle photos are available from the private review link in the Jobber request notes.`,
     `Terms: customer accepted v${payload.terms.version} on ${payload.terms.acceptedAt}; typed signature: ${payload.terms.signature}.`,
     `OWNER NEXT STEP: Review the request, photos, travel, and morning availability. If approved, send a Jobber Client Hub payment request for the ${money(BOOKING_CONFIG.reservation.depositAmount)} deposit; card details must stay in Jobber. Confirm only after the customer completes the approved deposit step.`,
     Object.keys(payload.attribution).length ? `Attribution: ${Object.entries(payload.attribution).map(([key, value]) => `${key}=${value}`).join(', ')}` : ''
@@ -193,14 +172,32 @@ function success(record) {
   return json({ requestId: record.requestId, route: 'appointment_request', status: record.status || BOOKING_STATUSES.PENDING_REVIEW });
 }
 
-async function resumePhotoHandoff(record, sessionId) {
-  const photos = await loadPhotos(record.photos, sessionId);
-  await attachBookingPhotos({ requestId: record.jobberRequestId, photos });
-  const completed = { ...record, stage: 'complete', completedAt: new Date().toISOString() };
+async function createPhotoReview(record, sessionId, origin) {
+  if (record.photoReview?.url) return record.photoReview;
+  const token = randomToken();
+  const expiresAt = Date.now() + PHOTO_REVIEW_WINDOW_MS;
+  const review = {
+    url: `${origin}/.netlify/functions/booking-photo-review?token=${encodeURIComponent(token)}`,
+    expiresAt
+  };
+  await bookingStore('booking-photo-reviews').set(token, JSON.stringify({
+    requestId: record.requestId,
+    sessionId,
+    photos: record.photos,
+    expiresAt,
+    createdAt: new Date().toISOString()
+  }));
+  return review;
+}
+
+async function resumePhotoHandoff(record, sessionId, origin) {
+  const photoReview = await createPhotoReview(record, sessionId, origin);
+  await addBookingNote({
+    requestId: record.jobberRequestId,
+    message: `Secure vehicle photos for Tuff Bros request ${record.requestId} (available for 30 days): ${photoReview.url}`
+  });
+  const completed = { ...record, photoReview, stage: 'complete', completedAt: new Date().toISOString() };
   await bookingStore('booking-submissions').setJSON(sessionId, completed);
-  // Jobber is the system of record after a successful handoff. Delete the
-  // temporary copies even if a later cleanup attempt encounters an error.
-  await Promise.allSettled(record.photos.map((photo) => bookingStore('booking-photos').delete(photo.id)));
   return completed;
 }
 
@@ -208,6 +205,7 @@ export default async (request) => {
   if (request.method !== 'POST') return json({ message: 'Method not allowed.' }, 405, { Allow: 'POST' });
   const session = await verifyBookingSession(request);
   if (!session.ok) return session.response;
+  const origin = process.env.URL || new URL(request.url).origin;
   if (!await takeRateLimit(request, { name: 'booking-request', limit: 5, windowMs: 15 * 60_000 })) {
     return json({ message: 'Too many appointment requests. Please wait a few minutes or call Tuff Bros.' }, 429);
   }
@@ -239,10 +237,10 @@ export default async (request) => {
   if (existing?.data?.stage === 'complete') return success(existing.data);
   if (existing?.data?.stage === 'request-created') {
     try {
-      return success(await resumePhotoHandoff(existing.data, session.sessionId));
+      return success(await resumePhotoHandoff(existing.data, session.sessionId, origin));
     } catch (error) {
-      console.error('booking photo handoff retry failed', error);
-      return json({ message: 'We saved your request but could not finish the photo handoff. Please try again in a moment.' }, 503);
+      console.error('booking photo review retry failed', error);
+      return json({ message: 'We saved your request but could not finish the secure photo review link. Please try again in a moment.' }, 503);
     }
   }
   if (existing?.data?.stage === 'slot-unavailable' || existing?.data?.stage === 'failed') {
@@ -276,16 +274,16 @@ export default async (request) => {
     });
     await addBookingNote({
       requestId: jobberRequest.id,
-      message: `Tuff Bros online request ${record.requestId}: this is a pending review, not a confirmed appointment. ${payload.photos.length} vehicle photos are being attached securely.`
+      message: `Tuff Bros online request ${record.requestId}: this is a pending review, not a confirmed appointment. ${payload.photos.length} vehicle photos will be available through a secure review link.`
     });
     const created = { ...record, stage: 'request-created', jobberRequestId: jobberRequest.id, jobberRequestUrl: jobberRequest.jobberWebUri || '' };
     await submissions.setJSON(session.sessionId, created);
-    return success(await resumePhotoHandoff(created, session.sessionId));
+    return success(await resumePhotoHandoff(created, session.sessionId, origin));
   } catch (error) {
     console.error('booking-request failed', error);
     const current = await submissions.getWithMetadata(session.sessionId, { type: 'json', consistency: 'strong' });
     if (current?.data?.stage === 'request-created') {
-      return json({ message: 'We saved your request but could not finish the photo handoff. Please try again in a moment.' }, 503);
+      return json({ message: 'We saved your request but could not finish the secure photo review link. Please try again in a moment.' }, 503);
     }
     await submissions.setJSON(session.sessionId, { ...record, stage: 'failed' });
     await releaseSlot({ date: record.date, window: record.window, requestId: record.requestId });

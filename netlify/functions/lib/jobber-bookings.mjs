@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import { jobberGraphql } from './jobber-client.mjs';
 
 function mutationResult(data, key) {
@@ -82,66 +81,6 @@ export async function createJobberBookingRequest({ clientId, title, instructions
   const result = mutationResult(data, 'requestCreate');
   if (!result.request?.id) throw new Error('Jobber could not create the appointment request.');
   return result.request;
-}
-
-async function createDirectUpload(photo) {
-  const bytes = Buffer.from(photo.bytes);
-  const data = await jobberGraphql(`
-    mutation CreateBookingPhotoUpload($input: DirectUploadCreateInput!, $destination: DirectUploadDestinations!) {
-      directUploadCreate(input: $input, destination: $destination) {
-        directUpload { id url parameters { name value } }
-        userErrors { message path }
-      }
-    }
-  `, {
-    destination: 'NOTE_ATTACHMENTS',
-    input: {
-      filename: photo.filename,
-      fileSize: bytes.length,
-      checksum: crypto.createHash('md5').update(bytes).digest('base64'),
-      contentType: photo.mime
-    }
-  });
-  const result = mutationResult(data, 'directUploadCreate');
-  const upload = result.directUpload;
-  if (!upload?.id || !upload.url || !Array.isArray(upload.parameters)) {
-    throw new Error('Jobber could not prepare a secure photo upload.');
-  }
-  const form = new FormData();
-  upload.parameters.forEach(({ name, value }) => form.append(name, value));
-  form.append('file', new Blob([bytes], { type: photo.mime }), photo.filename);
-  const response = await fetch(upload.url, { method: 'POST', body: form });
-  if (!response.ok) throw new Error('Jobber could not receive a booking photo.');
-
-  const complete = await jobberGraphql(`
-    mutation CompleteBookingPhotoUpload($directUploadId: EncodedId!) {
-      directUploadComplete(directUploadId: $directUploadId) {
-        directUpload { id }
-        userErrors { message path }
-      }
-    }
-  `, { directUploadId: upload.id });
-  const completed = mutationResult(complete, 'directUploadComplete');
-  return completed.directUpload?.id || upload.id;
-}
-
-export async function attachBookingPhotos({ requestId, photos }) {
-  const signedBlobIds = await Promise.all(photos.map(createDirectUpload));
-  const data = await jobberGraphql(`
-    mutation AttachBookingPhotos($requestId: EncodedId!, $input: RequestCreateNoteInput!) {
-      requestCreateNote(requestId: $requestId, input: $input) {
-        userErrors { message path }
-      }
-    }
-  `, {
-    requestId,
-    input: {
-      message: 'Vehicle photos submitted with the Tuff Bros online appointment request.',
-      pinned: true,
-      attachments: signedBlobIds.map((signedBlobId) => ({ signedBlobId }))
-    }
-  });
-  mutationResult(data, 'requestCreateNote');
 }
 
 export async function addBookingNote({ requestId, message, pinned = true }) {
