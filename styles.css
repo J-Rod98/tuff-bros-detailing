@@ -711,6 +711,29 @@ section[id], body > #top { scroll-margin-top: 84px; }
   vertical-align: middle;
 }
 
+/* Ceramic coating page: proof and pricing receive their own calmer treatment. */
+.ceramic-projects { background: var(--paper-light); }
+.ceramic-projects .section-subtitle { color: var(--ink-muted); }
+.ceramic-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 980px;
+  margin: 34px auto 0;
+}
+.ceramic-project {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-light);
+  border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: 0 10px 26px rgba(20,16,10,.09);
+}
+.ceramic-project img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+.ceramic-project figcaption { padding: 13px 16px 15px; }
+.ceramic-project figcaption strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.05rem; text-transform: uppercase; letter-spacing: .35px; }
+.ceramic-project figcaption span { display: block; margin-top: 3px; color: var(--ink-soft); font-size: .88rem; }
+
 /* =========================================================
    Before & After slider
    ========================================================= */
@@ -919,6 +942,23 @@ section[id], body > #top { scroll-margin-top: 84px; }
   gap: 20px;
 }
 .ceramic-pricing-grid { grid-template-columns: repeat(3, 1fr); }
+.ceramic-pricing { background: var(--paper-light); }
+.ceramic-offer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; max-width: 900px; margin: 34px auto 18px; }
+.ceramic-offer { padding: 28px; background: var(--white); border: 1px solid var(--line-light); border-radius: var(--radius); box-shadow: 0 10px 26px rgba(20,16,10,.09); }
+.ceramic-offer-featured { border-top: 4px solid var(--gold); padding-top: 25px; }
+.ceramic-offer-label { margin: 0 0 7px; color: var(--ink-soft); font-size: .77rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+.ceramic-offer h3 { margin: 0; color: var(--ink); font-size: 1.55rem; text-transform: uppercase; }
+.ceramic-offer-price { margin: 12px 0 16px; color: var(--ink-soft); font-size: .95rem; }
+.ceramic-offer-price strong { color: var(--ink); font-family: var(--font-head); font-size: 2rem; }
+.ceramic-rate-list { border-top: 1px solid var(--line-light); }
+.ceramic-rate-list p { display: flex; justify-content: space-between; gap: 14px; margin: 0; padding: 10px 0; border-bottom: 1px solid var(--line-light); color: var(--ink-soft); font-size: .93rem; }
+.ceramic-rate-list b { color: var(--ink); font-family: var(--font-head); white-space: nowrap; }
+.ceramic-offer-note { min-height: 44px; margin: 15px 0 0; color: var(--ink-soft); font-size: .88rem; line-height: 1.5; }
+.ceramic-offer .btn { margin-top: 18px; }
+.ceramic-correction { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 900px; margin: 0 auto; padding: 22px 26px; border: 1px solid var(--line-light); border-radius: var(--radius); background: #f5f1e8; }
+.ceramic-correction h3 { margin: 0; color: var(--ink); font-size: 1.32rem; text-transform: uppercase; }
+.ceramic-correction h3 span { color: var(--gold); white-space: nowrap; }
+.ceramic-correction p:last-child { margin: 7px 0 0; color: var(--ink-soft); font-size: .92rem; }
 .price-card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -1352,6 +1392,7 @@ summary:focus-visible {
 
   .testimonials-grid { grid-template-columns: 1fr; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .ceramic-correction { align-items: flex-start; flex-direction: column; }
   .areas-inner { grid-template-columns: 1fr; gap: 30px; }
   .areas-copy .section-title.left,
   .areas-copy .section-eyebrow.left { text-align: left; }
@@ -1369,6 +1410,11 @@ summary:focus-visible {
   .price-card-wide { grid-column: span 1; flex-direction: column; align-items: stretch; text-align: center; }
   .price-card-wide .btn { width: 100%; }
   .gallery-grid { grid-template-columns: 1fr; }
+  .ceramic-project-grid, .ceramic-offer-grid { grid-template-columns: 1fr; }
+  .ceramic-offer { padding: 24px 20px; }
+  .ceramic-offer-note { min-height: 0; }
+  .ceramic-correction { padding: 22px 20px; }
+  .ceramic-correction .btn { width: 100%; }
   .trustbar-inner { grid-template-columns: 1fr; }
   .tb-item { border-left: none; padding-left: 0; }
   .areas-list { grid-template-columns: 1fr 1fr; }
