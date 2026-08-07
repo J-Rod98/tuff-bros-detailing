@@ -960,6 +960,9 @@ section[id], body > #top { scroll-margin-top: 84px; }
 .ceramic-correction h3 { margin: 0; color: var(--ink); font-size: 1.32rem; text-transform: uppercase; }
 .ceramic-correction h3 span { color: var(--gold); white-space: nowrap; }
 .ceramic-correction p:last-child { margin: 7px 0 0; color: var(--ink-soft); font-size: .92rem; }
+.ceramic-pricing > .container > p:not(.section-lead) { color: var(--ink-muted); }
+.ceramic-pricing > .container > p:not(.section-lead) strong { color: var(--ink-text); }
+.ceramic-pricing > .container > p:not(.section-lead) a { color: var(--gold); }
 .price-card {
   background: var(--panel);
   border: 1px solid var(--line);
