@@ -29,6 +29,7 @@
   --white:       #ffffff;   /* clean white light band */
   --ink-text:    #17171c;   /* dark text on light */
   --ink-muted:   #55504a;   /* muted dark text on light */
+  --ink-soft:    #55504a;   /* readable secondary text on light */
   --line-light:  #e5ddce;   /* hairline on light */
 
   /* Lines & hairlines */
