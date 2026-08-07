@@ -918,6 +918,7 @@ section[id], body > #top { scroll-margin-top: 84px; }
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
+.ceramic-pricing-grid { grid-template-columns: repeat(3, 1fr); }
 .price-card {
   background: var(--panel);
   border: 1px solid var(--line);
