@@ -729,7 +729,7 @@ section[id], body > #top { scroll-margin-top: 84px; }
   background: var(--white);
   box-shadow: 0 10px 26px rgba(20,16,10,.09);
 }
-.ceramic-project img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+.ceramic-project img { width: 100%; height: min(27vw, 320px); object-fit: cover; display: block; }
 .ceramic-project figcaption { padding: 13px 16px 15px; }
 .ceramic-project figcaption strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.05rem; text-transform: uppercase; letter-spacing: .35px; }
 .ceramic-project figcaption span { display: block; margin-top: 3px; color: var(--ink-soft); font-size: .88rem; }
@@ -1411,6 +1411,7 @@ summary:focus-visible {
   .price-card-wide .btn { width: 100%; }
   .gallery-grid { grid-template-columns: 1fr; }
   .ceramic-project-grid, .ceramic-offer-grid { grid-template-columns: 1fr; }
+  .ceramic-project img { height: 250px; }
   .ceramic-offer { padding: 24px 20px; }
   .ceramic-offer-note { min-height: 0; }
   .ceramic-correction { padding: 22px 20px; }
