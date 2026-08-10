@@ -243,8 +243,11 @@ document.addEventListener('DOMContentLoaded', function () {
           trackEvent('generate_lead', { form_id: 'quoteForm' });
           if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
           form.reset();
-          confirmation.hidden = false;
-          confirmation.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // A dedicated confirmation URL lets ad platforms measure completed
+          // quote requests without relying on an in-page success message.
+          window.setTimeout(function () {
+            window.location.assign('/quote-received/');
+          }, 100);
         } else {
           showError();
         }
