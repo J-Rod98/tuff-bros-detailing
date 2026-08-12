@@ -1643,9 +1643,3 @@ summary:focus-visible {
 
 /* Single before/after slider centered inside prose */
 .prose .ba-slider { margin: 6px 0 20px; }
-.trim-result-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin: 20px 0 8px; }
-.trim-result-grid figure { margin: 0; overflow: hidden; border: 1px solid var(--line-light); border-radius: var(--radius); background: var(--white); box-shadow: 0 10px 26px rgba(20,16,10,.09); }
-.trim-result-grid img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-.trim-result-grid figcaption { display: grid; gap: 3px; padding: 14px 16px; color: var(--ink-soft); font-size: .88rem; }
-.trim-result-grid figcaption strong { color: var(--ink); font-family: var(--font-head); font-size: 1.2rem; letter-spacing: .5px; text-transform: uppercase; }
-@media (max-width: 640px) { .trim-result-grid { grid-template-columns: 1fr; } }
