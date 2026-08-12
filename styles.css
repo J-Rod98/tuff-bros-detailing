@@ -958,8 +958,11 @@ section[id], body > #top { scroll-margin-top: 84px; }
 .ceramic-offer .btn { margin-top: 18px; }
 .ceramic-correction { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 900px; margin: 0 auto; padding: 22px 26px; border: 1px solid var(--line-light); border-radius: var(--radius); background: #f5f1e8; }
 .ceramic-correction h3 { margin: 0; color: var(--ink); font-size: 1.32rem; text-transform: uppercase; }
-.ceramic-correction h3 span { color: var(--gold); white-space: nowrap; }
-.ceramic-correction p:last-child { margin: 7px 0 0; color: var(--ink-soft); font-size: .92rem; }
+.ceramic-correction > div { flex: 1; }
+.ceramic-correction p { margin: 7px 0 0; color: var(--ink-soft); font-size: .92rem; }
+.ceramic-correction-price strong { color: var(--gold); font-family: var(--font-head); font-size: 1.55rem; }
+.ceramic-correction-rates { max-width: 540px; margin-top: 16px; }
+.ceramic-correction .ceramic-correction-note { margin-top: 13px; font-size: .84rem; }
 .ceramic-pricing-notes { display: grid; gap: 8px; max-width: 900px; margin: 22px auto 0; padding-top: 18px; border-top: 1px solid var(--line-light); }
 .ceramic-pricing-notes p { margin: 0; color: var(--ink-muted); font-size: .92rem; }
 .ceramic-pricing-notes strong { color: var(--ink-text); }
