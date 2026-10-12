@@ -1652,3 +1652,7 @@ summary:focus-visible {
 
 .ceramic-text-link { margin-top: 12px; color: var(--gold); font-size: .85rem; text-align: center; }
 .form-row[hidden], .quote-tip[hidden] { display: none; }
+
+.price-card:not(.price-card-wide) .price-note { flex: 0 0 auto; margin: 12px 0 0; }
+.price-card:not(.price-card-wide) .btn { margin-top: auto; }
+.price-card:not(.price-card-wide) .price-row:last-of-type, .price-card:not(.price-card-wide) .price-note { margin-bottom: 18px; }
