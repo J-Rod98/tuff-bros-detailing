@@ -238,6 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
     'quick-interior': 'Quick Interior Clean',
     'deep-interior': 'Deep Interior Clean',
     'exterior': 'Exterior Detailing',
+    'wash-clay-seal': 'Wash, Clay & Seal',
     'basic-in-out': 'Basic In & Out',
     'full-detail': 'Full Detail'
   };

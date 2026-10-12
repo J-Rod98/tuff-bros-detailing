@@ -65,6 +65,15 @@ export const BOOKING_CONFIG = Object.freeze({
       maintenanceOnly: true
     },
     {
+      id: 'wash-clay-seal',
+      name: 'Wash, Clay & Seal',
+      prices: { car: 199, suv: 249, truck: 249 },
+      duration: 'About 2–3 hours',
+      bestFor: 'Paint that feels rough or needs a smoother finish and renewed protection.',
+      includes: ['Hand wash', 'Wheels and tires', 'Iron decontamination as needed', 'Clay decontamination', 'Paint sealant', 'Tire dressing', 'Exterior glass'],
+      note: 'Exterior only. Machine polishing, paint correction, and ceramic coating are not included. Heavy contamination and oversized vehicles require a custom quote.'
+    },
+    {
       id: 'basic-in-out',
       name: 'Basic In & Out',
       prices: { car: 150, suv: 180, truck: 180 },
@@ -135,6 +144,7 @@ export const BOOKING_CONFIG = Object.freeze({
   photoRequirements: {
     'quick-interior': ['frontSeats', 'rearSeats', 'floor'],
     'basic-wash-wax': ['front', 'rear'],
+    'wash-clay-seal': ['front', 'rear'],
     'basic-in-out': ['front', 'rear', 'frontSeats', 'floor'],
     'headlight-restoration': ['headlights']
   },

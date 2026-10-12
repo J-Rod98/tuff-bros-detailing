@@ -9,7 +9,7 @@ import {
   getPhotoTypesForService,
   getVehicle,
   money
-} from '/booking-config.js?v=3';
+} from '/booking-config.js?v=4';
 
 const STEP_TITLES = [
   'Choose Service',
@@ -165,10 +165,10 @@ function serviceCard(service) {
 
 function renderServiceStep() {
   const eligibleAddOns = state.serviceId && state.serviceId !== 'headlight-restoration'
-    ? BOOKING_CONFIG.addOns.filter((addOn) => addOn.onlineEligible)
+    ? BOOKING_CONFIG.addOns.filter((addOn) => addOn.onlineEligible && !(state.serviceId === 'wash-clay-seal' && addOn.id === 'paste-wax'))
     : [];
   stepEl.innerHTML = `<h2>Choose a standard service</h2>
-    <p>These maintenance-level services can be requested online. A final review protects you from an inaccurate quote or appointment.</p>
+    <p>Choose an exterior service or a maintenance clean. Every request is reviewed before we confirm the price and appointment.</p>
     <div class="service-grid">
       ${BOOKING_CONFIG.services.map(serviceCard).join('')}
       <div class="service-quote-card">

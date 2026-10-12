@@ -56,3 +56,10 @@ test('unrecognized package text cannot populate a quote request', () => {
   assert.equal(field('ceramicPackage').value, '');
   assert.equal(field('quotePackageSummary').hidden, true);
 });
+
+test('wash clay and seal quote links select the service and hide interior questions', () => {
+  const { field, rows } = initializeQuote('?service=wash-clay-seal');
+  assert.equal(field('service').value, 'Wash, Clay & Seal');
+  assert.equal(rows[0].hidden, true);
+  assert.equal(field('ceramicPackage').value, '');
+});

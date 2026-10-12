@@ -80,3 +80,13 @@ test('headlight add-ons and flagged conditions add required evidence', () => {
   assert.deepEqual(getRequiredPhotoIds('headlight-restoration', ['headlight-restoration']), ['headlights']);
   assert.equal(getPhotoTypesForService('quick-interior', ['headlight-restoration']).find(photo => photo.id === 'headlights').required, true);
 });
+
+test('wash clay and seal uses exterior pricing, photos, and reviewed appointment routing', () => {
+  assert.equal(getStartingPrice('wash-clay-seal', 'car'), 199);
+  assert.equal(getStartingPrice('wash-clay-seal', 'suv'), 249);
+  assert.equal(getStartingPrice('wash-clay-seal', 'truck'), 249);
+  assert.equal(getStartingPrice('wash-clay-seal', 'oversized'), null);
+  assert.deepEqual(getRequiredPhotoIds('wash-clay-seal'), ['front', 'rear']);
+  assert.equal(evaluateReservation({ serviceId: 'wash-clay-seal', vehicleId: 'car', city: 'Little Rock', photoCount: 2 }).route, 'appointment_request');
+  assert.equal(evaluateReservation({ serviceId: 'wash-clay-seal', vehicleId: 'oversized' }).route, 'quote_request');
+});
