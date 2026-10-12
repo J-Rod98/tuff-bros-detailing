@@ -1521,7 +1521,7 @@ summary:focus-visible {
 .content-section.alt .prose ul:not(.check-list),
 .content-section.alt .prose li { color: var(--ink-muted); }
 .content-section.alt .prose .check-list li { color: var(--ink-text); }
-.content-section.alt .prose a { color: var(--gold-dark); }
+.content-section.alt .prose a:not(.btn) { color: var(--gold-dark); }
 .content-section.alt .prose img.inline-photo { border-color: var(--line-light); }
 .content-section.alt .btn-outline-light {
   color: var(--ink-text);
@@ -1542,7 +1542,7 @@ summary:focus-visible {
 .prose li { margin-bottom: 6px; }
 .prose .check-list { margin: 18px 0 22px; }
 .prose .check-list li { color: var(--text); }
-.prose a { color: var(--accent-text); font-weight: 600; }
+.prose a:not(.btn) { color: var(--accent-text); font-weight: 600; }
 .prose a.btn-primary, .cta-inline a.btn-primary { color: #fff; }
 .prose a.btn-outline-light { color: #fff; }
 .cta-inline { text-align: center; margin-top: 8px; }
