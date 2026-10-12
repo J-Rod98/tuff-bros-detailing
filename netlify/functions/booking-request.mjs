@@ -6,6 +6,7 @@ import {
   getAddOn,
   getService,
   getStartingPrice,
+  getRequiredPhotoIds,
   getVehicle,
   money
 } from '../../booking-config.js';
@@ -13,7 +14,6 @@ import { bookingCanAcceptRequests, isBookableDate, slotKey } from './booking-ava
 import { addBookingNote, createJobberBookingRequest, findOrCreateBookingClient } from './lib/jobber-bookings.mjs';
 import { bookingStore, json, randomToken, takeRateLimit, validPhotoType, verifyBookingSession } from './lib/booking-security.mjs';
 
-const REQUIRED_PHOTO_TYPES = BOOKING_CONFIG.requiredPhotoTypes.filter((photo) => photo.required).map((photo) => photo.id);
 const MAX_BODY_BYTES = 80_000;
 const PHOTO_REVIEW_WINDOW_MS = 30 * 24 * 60 * 60 * 1_000;
 
@@ -72,7 +72,7 @@ function normalizePayload(input) {
   if (!photos.length || photos.some((photo) => !photo.id || !validPhotoType(photo.photoType))) throw new Error('Upload valid vehicle photos before sending your request.');
   if (new Set(photos.map((photo) => photo.photoType)).size !== photos.length) throw new Error('Upload only one photo for each requested view.');
   const photoTypes = new Set(photos.map((photo) => photo.photoType));
-  if (REQUIRED_PHOTO_TYPES.some((photoType) => !photoTypes.has(photoType))) throw new Error('Add the required vehicle photos before sending your request.');
+  if (getRequiredPhotoIds(serviceId, addOnIds, normalizedConditions(input.conditions)).some((photoType) => !photoTypes.has(photoType))) throw new Error('Add the required vehicle photos before sending your request.');
 
   const date = clean(appointmentInput.date, 10);
   const window = clean(appointmentInput.window, 40);

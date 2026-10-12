@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
+  function storageGet(key) {
+    try { return window.sessionStorage.getItem(key); } catch (_) { return null; }
+  }
+  function storageSet(key, value) {
+    try { window.sessionStorage.setItem(key, value); } catch (_) { /* Attribution is optional. */ }
+  }
+
   // ---- Meta Pixel: anonymous page and completed-quote measurement ----
   // Do not send quote-form fields or other personally identifiable information.
   (function (f, b, e, v, n, t, s) {
@@ -95,10 +102,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var current = new URLSearchParams(window.location.search);
     var attribution = new URLSearchParams();
     keys.forEach(function (key) {
-      var value = current.get(key) || sessionStorage.getItem('tuffbros_' + key);
+      var value = current.get(key) || storageGet('tuffbros_' + key);
       if (value) {
         attribution.set(key, value);
-        sessionStorage.setItem('tuffbros_' + key, value);
+        storageSet('tuffbros_' + key, value);
       }
     });
     if (!attribution.toString()) return;
@@ -216,6 +223,48 @@ document.addEventListener('DOMContentLoaded', function () {
       // Existing quote form remains fully usable if stored context cannot be read.
     }
   })();
+  // Carry a known service/package into the quote form; never insert raw URL text.
+  var serviceField = document.getElementById('service');
+  var interestField = document.getElementById('ceramicInterest');
+  var packageField = document.getElementById('ceramicPackage');
+  var packageSummary = document.getElementById('quotePackageSummary');
+  var packageNames = {
+    'protection': 'Ceramic Protection — starting at $749',
+    'correct-protect': 'Correct + Protect — starting at $999',
+    'pro': 'Correct + Protect PRO — starting at $1,499; inspection required'
+  };
+  var serviceNames = {
+    'ceramic': 'Ceramic Coating',
+    'quick-interior': 'Quick Interior Clean',
+    'deep-interior': 'Deep Interior Clean',
+    'exterior': 'Exterior Detailing',
+    'basic-in-out': 'Basic In & Out',
+    'full-detail': 'Full Detail'
+  };
+  var requestedService = serviceNames[query.get('service')];
+  var requestedPackage = query.get('service') === 'ceramic' ? packageNames[query.get('package')] : '';
+  if (serviceField && requestedService) serviceField.value = requestedService;
+  if (packageField && requestedPackage) packageField.value = requestedPackage;
+  function updateQuoteQuestions() {
+    var service = serviceField ? serviceField.value : '';
+    var ceramic = service === 'Ceramic Coating';
+    var interior = !service || ['Quick Interior Clean', 'Deep Interior Clean', 'Basic In & Out', 'Full Detail', 'Not Sure / Need Help Deciding'].indexOf(service) >= 0;
+    document.querySelectorAll('[data-interior-question]').forEach(function (row) {
+      row.hidden = !interior;
+      row.querySelectorAll('select').forEach(function (field) {
+        field.disabled = !interior;
+        if (!interior) field.value = 'No';
+      });
+    });
+    if (interestField && ceramic) interestField.value = 'Yes';
+    if (packageField && !ceramic) packageField.value = '';
+    if (packageSummary) {
+      packageSummary.hidden = !(ceramic && packageField && packageField.value);
+      packageSummary.textContent = packageField && packageField.value ? 'Your selected package: ' + packageField.value : '';
+    }
+  }
+  if (serviceField) serviceField.addEventListener('change', updateQuoteQuestions);
+  updateQuoteQuestions();
   setHiddenField('referrerHost', referrerHost);
 
   form.addEventListener('submit', function (e) {

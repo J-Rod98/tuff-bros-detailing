@@ -558,7 +558,7 @@ section[id], body > #top { scroll-margin-top: 84px; }
 .services { background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 .service-card {
@@ -939,7 +939,7 @@ section[id], body > #top { scroll-margin-top: 84px; }
 .pricing { background: var(--bg); }
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 .ceramic-pricing-grid { grid-template-columns: repeat(3, 1fr); }
@@ -1017,7 +1017,7 @@ section[id], body > #top { scroll-margin-top: 84px; }
   box-shadow: 0 6px 16px rgba(210,31,38,.45);
 }
 .price-card-wide {
-  grid-column: span 4;
+  grid-column: 1 / -1;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -1649,3 +1649,6 @@ summary:focus-visible {
 
 /* Single before/after slider centered inside prose */
 .prose .ba-slider { margin: 6px 0 20px; }
+
+.ceramic-text-link { margin-top: 12px; color: var(--gold); font-size: .85rem; text-align: center; }
+.form-row[hidden], .quote-tip[hidden] { display: none; }

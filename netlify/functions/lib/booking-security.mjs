@@ -3,7 +3,7 @@ import { getStore } from '@netlify/blobs';
 
 const SESSION_COOKIE = 'tuffbros_booking_session';
 const SESSION_MAX_AGE_SECONDS = 60 * 60;
-const ALLOWED_PHOTO_TYPES = new Set(['front', 'rear', 'frontSeats', 'rearSeats', 'floor', 'problemAreas']);
+const ALLOWED_PHOTO_TYPES = new Set(['front', 'rear', 'frontSeats', 'rearSeats', 'floor', 'headlights', 'problemAreas']);
 
 export function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {

@@ -5,9 +5,11 @@ import {
   getAddOn,
   getService,
   getStartingPrice,
+  getRequiredPhotoIds,
+  getPhotoTypesForService,
   getVehicle,
   money
-} from '/booking-config.js';
+} from '/booking-config.js?v=3';
 
 const STEP_TITLES = [
   'Choose Service',
@@ -20,7 +22,7 @@ const STEP_TITLES = [
   'Review Request'
 ];
 
-const REQUIRED_PHOTO_IDS = BOOKING_CONFIG.requiredPhotoTypes.filter((photo) => photo.required).map((photo) => photo.id);
+
 const app = document.getElementById('bookingApp');
 const form = document.getElementById('bookingForm');
 const stepEl = document.getElementById('bookingStep');
@@ -55,15 +57,23 @@ function track(name, params = {}) {
   if (typeof window.fbq === 'function') window.fbq('trackCustom', name, params);
 }
 
+function storageGet(key) {
+  try { return sessionStorage.getItem(key); } catch (_) { return null; }
+}
+
+function storageSet(key, value) {
+  try { sessionStorage.setItem(key, value); } catch (_) { /* Attribution is optional. */ }
+}
+
 function readAttribution() {
   const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'];
   const query = new URLSearchParams(window.location.search);
   const data = {};
   keys.forEach((key) => {
-    const value = query.get(key) || sessionStorage.getItem(`tuffbros_${key}`);
+    const value = query.get(key) || storageGet(`tuffbros_${key}`);
     if (value) {
       data[key] = value.slice(0, 250);
-      sessionStorage.setItem(`tuffbros_${key}`, data[key]);
+      storageSet(`tuffbros_${key}`, data[key]);
     }
   });
   return data;
@@ -198,14 +208,15 @@ function renderVehicleStep() {
 }
 
 function field(label, id, options = {}) {
-  const { type = 'text', value = '', required = false, autocomplete = '', placeholder = '', full = false, note = '' } = options;
+  const { type = 'text', value = '', required = false, autocomplete = '', placeholder = '', inputmode = '', full = false, note = '' } = options;
   const requirement = required ? ' <span class="field-required" aria-hidden="true">*</span>' : '';
   const attribute = required ? ' required' : '';
   const auto = autocomplete ? ` autocomplete="${autocomplete}"` : '';
+  const mode = inputmode ? ` inputmode="${inputmode}"` : '';
   const place = placeholder ? ` placeholder="${escapeHtml(placeholder)}"` : '';
   return `<div class="booking-field${full ? ' full' : ''}">
     <label for="${id}">${label}${requirement}</label>
-    <input id="${id}" name="${id}" type="${type}" value="${escapeHtml(value)}"${attribute}${auto}${place}>
+    <input id="${id}" name="${id}" type="${type}" value="${escapeHtml(value)}"${attribute}${auto}${place}${mode}>
     ${note ? `<p class="input-note">${note}</p>` : ''}
   </div>`;
 }
@@ -260,8 +271,8 @@ function photoInput(photo) {
 function renderPhotosStep() {
   stepEl.innerHTML = `<h2>Upload a few clear photos</h2>
     <p>Photos keep the estimate honest and help us confirm the right appointment. We automatically reduce compatible image files before sending them.</p>
-    <div class="photo-grid">${BOOKING_CONFIG.requiredPhotoTypes.map(photoInput).join('')}</div>
-    <p class="upload-requirement">Front, rear, front seats, rear seats, and floor photos are required. Add problem-area photos whenever something needs extra attention.</p>`;
+    <div class="photo-grid">${getPhotoTypesForService(state.serviceId, state.addOnIds, state.conditions).map(photoInput).join('')}</div>
+    <p class="upload-requirement">Only photos marked Required are needed for this service. Add a problem-area photo if there is anything else we should review.</p>`;
 }
 
 function renderAddressStep() {
@@ -419,7 +430,7 @@ function isStepValid() {
     if (valueOf('email') && !/^\S+@\S+\.\S+$/.test(valueOf('email'))) return 'Enter a valid email or leave it blank.';
   }
   if (state.step === 5) {
-    const missing = REQUIRED_PHOTO_IDS.filter((id) => !state.photos[id]);
+    const missing = getRequiredPhotoIds(state.serviceId, state.addOnIds, state.conditions).filter((id) => !state.photos[id]);
     if (missing.length) return 'Add the required vehicle photos before continuing.';
     const hasCondition = Object.values(state.conditions).some(Boolean);
     if (hasCondition && !state.photos.problemAreas) return 'Add a problem-area photo so we can review the reported condition.';
@@ -605,6 +616,7 @@ form.addEventListener('click', (event) => {
   const actionButton = event.target.closest('[data-action]');
   const quoteLink = event.target.closest('[data-quote-route]');
   if (serviceButton) {
+    if (state.serviceId !== serviceButton.dataset.service) state.photos = {};
     state.serviceId = serviceButton.dataset.service;
     if (state.serviceId === 'headlight-restoration') state.addOnIds = [];
     if (!state.started) { state.started = true; track('booking_started'); }

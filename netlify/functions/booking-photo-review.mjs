@@ -6,6 +6,7 @@ const PHOTO_LABELS = {
   frontSeats: 'Front seats',
   rearSeats: 'Rear seats',
   floor: 'Floor / carpets',
+  headlights: 'Both headlights',
   problemAreas: 'Problem areas'
 };
 

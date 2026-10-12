@@ -58,3 +58,25 @@ test('requires photo review for headlight restoration without photos', () => {
   assert.equal(result.route, 'photo_review');
   assert.equal(result.initialStatus, BOOKING_STATUSES.PENDING_PHOTO_REVIEW);
 });
+
+// Service-specific photo rules are shared by the browser and request handler.
+const { getRequiredPhotoIds, getPhotoTypesForService } = await import('../booking-config.js');
+
+test('exterior and headlight services do not require unrelated cabin photos', () => {
+  assert.deepEqual(getRequiredPhotoIds('basic-wash-wax'), ['front', 'rear']);
+  assert.deepEqual(getRequiredPhotoIds('headlight-restoration'), ['headlights']);
+  assert.deepEqual(getPhotoTypesForService('headlight-restoration').map(photo => photo.id), ['headlights', 'problemAreas']);
+});
+
+test('interior and combined services require the relevant views', () => {
+  assert.deepEqual(getRequiredPhotoIds('quick-interior'), ['frontSeats', 'rearSeats', 'floor']);
+  assert.deepEqual(getRequiredPhotoIds('basic-in-out'), ['front', 'rear', 'frontSeats', 'floor']);
+  assert.equal(getPhotoTypesForService('basic-in-out').find(photo => photo.id === 'rearSeats').required, false);
+});
+
+test('headlight add-ons and flagged conditions add required evidence', () => {
+  assert.deepEqual(getRequiredPhotoIds('basic-wash-wax', ['headlight-restoration']), ['front', 'rear', 'headlights']);
+  assert.deepEqual(getRequiredPhotoIds('quick-interior', [], { petHair: true }), ['frontSeats', 'rearSeats', 'floor', 'problemAreas']);
+  assert.deepEqual(getRequiredPhotoIds('headlight-restoration', ['headlight-restoration']), ['headlights']);
+  assert.equal(getPhotoTypesForService('quick-interior', ['headlight-restoration']).find(photo => photo.id === 'headlights').required, true);
+});

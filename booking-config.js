@@ -80,13 +80,13 @@ export const BOOKING_CONFIG = Object.freeze({
       prices: { car: 125, suv: 125, truck: 125 },
       duration: 'About 1–2 hours',
       bestFor: 'Cloudy or yellowed headlights that need an assessment first.',
-      includes: ['Headlight condition review', 'Restoration estimate'],
+      includes: ['Headlight condition review', 'Oxidation removal', 'Lens polishing', 'Protective finish'],
       note: 'Standalone service starts at $125. Photos are required before approval.',
       requiresPhotos: true
     }
   ],
   quoteOnlyServices: [
-    'Full Interior Detail',
+    'Deep Interior Clean',
     'Full Detail',
     'Ceramic Coating',
     'Paint Enhancement',
@@ -132,13 +132,20 @@ export const BOOKING_CONFIG = Object.freeze({
       onlineEligible: true
     }
   ],
-  requiredPhotoTypes: [
-    { id: 'front', label: 'Front of vehicle', required: true },
-    { id: 'rear', label: 'Rear of vehicle', required: true },
-    { id: 'frontSeats', label: 'Front seats', required: true },
-    { id: 'rearSeats', label: 'Rear seats', required: true },
-    { id: 'floor', label: 'Floor / carpets', required: true },
-    { id: 'problemAreas', label: 'Problem areas', required: false }
+  photoRequirements: {
+    'quick-interior': ['frontSeats', 'rearSeats', 'floor'],
+    'basic-wash-wax': ['front', 'rear'],
+    'basic-in-out': ['front', 'rear', 'frontSeats', 'floor'],
+    'headlight-restoration': ['headlights']
+  },
+  photoTypes: [
+    { id: 'front', label: 'Front of vehicle' },
+    { id: 'rear', label: 'Rear of vehicle' },
+    { id: 'frontSeats', label: 'Front seats' },
+    { id: 'rearSeats', label: 'Rear seats' },
+    { id: 'floor', label: 'Floor / carpets' },
+    { id: 'headlights', label: 'Both headlights in one clear photo' },
+    { id: 'problemAreas', label: 'Problem areas' }
   ]
 });
 
@@ -234,4 +241,21 @@ export function evaluateReservation({ serviceId, vehicleId, conditions = {}, cit
     selectedAddOns: selectedAddOns.map((addOn) => addOn.id),
     estimatedPrice: getStartingPrice(serviceId, vehicleId)
   };
+}
+
+/** Shared browser/server requirements: require only views relevant to the service. */
+export function getRequiredPhotoIds(serviceId, addOnIds = [], conditions = {}) {
+  const required = [...(BOOKING_CONFIG.photoRequirements[serviceId] || [])];
+  if (addOnIds.includes('headlight-restoration')) required.push('headlights');
+  if (flaggedConditions(conditions).length) required.push('problemAreas');
+  return [...new Set(required)];
+}
+
+export function getPhotoTypesForService(serviceId, addOnIds = [], conditions = {}) {
+  const required = getRequiredPhotoIds(serviceId, addOnIds, conditions);
+  const visible = new Set([...required, 'problemAreas']);
+  if (serviceId === 'basic-in-out') visible.add('rearSeats');
+  return BOOKING_CONFIG.photoTypes
+    .filter((photo) => visible.has(photo.id))
+    .map((photo) => ({ ...photo, required: required.includes(photo.id) }));
 }
