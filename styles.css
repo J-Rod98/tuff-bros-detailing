@@ -747,6 +747,20 @@ section[id], body > #top { scroll-margin-top: 84px; }
 .ceramic-project figcaption strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.05rem; text-transform: uppercase; letter-spacing: .35px; }
 .ceramic-project figcaption span { display: block; margin-top: 3px; color: var(--ink-muted); font-size: .88rem; }
 
+.boat-project .container { max-width: 1024px; }
+.content-section.boat-project { scroll-margin-top: 100px; background: var(--paper-light); color: var(--ink); }
+.boat-project .section-title { color: var(--ink); }
+.boat-project .section-eyebrow { color: var(--gold); }
+.boat-project p, .boat-project figcaption { color: var(--ink-muted); }
+.boat-project h3 { color: var(--ink); font-family: var(--font-head); font-size: 1.65rem; margin: 30px 0 16px; }
+.boat-project-story { max-width: 850px; margin: 22px auto 30px; }
+.boat-project-story p { margin: 0 0 16px; line-height: 1.75; }
+.boat-project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 22px; }
+.boat-project-grid figure { margin: 0; overflow: hidden; border: 1px solid var(--line-light); border-radius: var(--radius); background: var(--white); }
+.boat-project-grid img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+.boat-project-grid figcaption { padding: 14px 16px; font-size: .9rem; line-height: 1.5; }
+.boat-project .cta-inline p { margin-top: 14px; }
+
 /* =========================================================
    Before & After slider
    ========================================================= */
