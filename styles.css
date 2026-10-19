@@ -715,6 +715,17 @@ section[id], body > #top { scroll-margin-top: 84px; }
 /* Ceramic coating page: proof and pricing receive their own calmer treatment. */
 .ceramic-projects { background: var(--paper-light); }
 .ceramic-projects .section-subtitle { color: var(--ink-muted); }
+.ceramic-story { max-width: 980px; margin: 34px auto 0; overflow: hidden; border: 1px solid var(--line-light); border-radius: var(--radius); background: var(--white); color: var(--ink); scroll-margin-top: 100px; }
+.ceramic-story-hero { display: block; width: 100%; height: auto; }
+.ceramic-story-copy { padding: clamp(20px, 4vw, 36px); }
+.ceramic-story-copy h3 { color: var(--ink); font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 2.5rem); line-height: 1.15; margin: 8px 0 18px; }
+.ceramic-story-copy p { color: var(--ink-muted); margin: 0 0 18px; line-height: 1.7; }
+.ceramic-story-copy .section-eyebrow { color: var(--gold); margin-bottom: 8px; }
+.ceramic-story-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; margin: 24px 0; }
+.ceramic-story-photos figure { margin: 0; }
+.ceramic-story-photos img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 8px; }
+.ceramic-story-photos figure:last-child img { object-fit: contain; background: var(--paper-light); }
+.ceramic-story-photos figcaption { color: var(--ink-muted); font-size: .85rem; line-height: 1.5; margin-top: 8px; }
 .ceramic-project-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
