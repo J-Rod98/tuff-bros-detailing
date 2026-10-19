@@ -725,6 +725,7 @@ section[id], body > #top { scroll-margin-top: 84px; }
 .ceramic-story-photos figure { margin: 0; }
 .ceramic-story-photos img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 8px; }
 .ceramic-story-photos figure:last-child img { object-fit: contain; background: var(--paper-light); }
+.ceramic-story-photos-landscape img { aspect-ratio: 4 / 3; object-fit: contain; }
 .ceramic-story-photos figcaption { color: var(--ink-muted); font-size: .85rem; line-height: 1.5; margin-top: 8px; }
 .ceramic-project-grid {
   display: grid;
