@@ -268,8 +268,11 @@ document.addEventListener('DOMContentLoaded', function () {
   updateQuoteQuestions();
   setHiddenField('referrerHost', referrerHost);
 
+  var quoteSubmitting = false;
+  var quoteAccepted = false;
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (quoteSubmitting) return;
 
     if (errorEl) errorEl.hidden = true;
     if (confirmation) confirmation.hidden = true;
@@ -280,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var originalLabel = submitBtn.textContent;
+    quoteSubmitting = true;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
 
@@ -290,22 +294,38 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(function (response) {
         if (response.ok) {
-          trackEvent('generate_lead', { form_id: 'quoteForm' });
-          if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
+          quoteAccepted = true;
           form.reset();
-          // A dedicated confirmation URL lets ad platforms measure completed
-          // quote requests without relying on an in-page success message.
-          window.setTimeout(function () {
+          // Measure accepted requests, not visits to the confirmation page.
+          // Give Analytics time to send, but never make confirmation depend on it.
+          var redirected = false;
+          function redirectToConfirmation() {
+            if (redirected) return;
+            redirected = true;
             window.location.assign('/quote-received/');
-          }, 100);
+          }
+          window.setTimeout(redirectToConfirmation, 1800);
+          try {
+            trackEvent('generate_lead', {
+              form_id: 'quoteForm',
+              event_callback: redirectToConfirmation,
+              event_timeout: 1500
+            });
+          } catch (_) { /* Measurement must not turn an accepted request into an error. */ }
+          try {
+            if (typeof window.fbq === 'function') window.fbq('track', 'Lead');
+          } catch (_) { /* Confirmation does not depend on third-party measurement. */ }
         } else {
           showError();
         }
       })
       .catch(showError)
       .finally(function () {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalLabel;
+        if (!quoteAccepted) {
+          quoteSubmitting = false;
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        }
       });
   });
 
