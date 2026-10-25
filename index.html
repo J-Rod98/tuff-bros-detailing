@@ -23,9 +23,9 @@
 <meta name="twitter:image" content="https://tuffbrosdetailing.com/og-image.jpg">
 
 <!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/barlow-condensed-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="home-fonts.css?v=1">
 
 <!-- Google Analytics 4 (Measurement ID: G-30PYXCXW4W) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-30PYXCXW4W"></script>
@@ -157,7 +157,7 @@
   <div class="container header-inner">
     <a href="#top" class="logo" aria-label="Tuff Bros Mobile Detailing — home">
       <picture>
-        <source srcset="logo-badge.webp 512w, logo-badge@2x.webp 800w" sizes="62px" type="image/webp">
+        <source srcset="logo-badge-128.webp 128w, logo-badge-192.webp 192w, logo-badge-256.webp 256w" sizes="62px" type="image/webp">
         <img src="logo-badge@2x.png" srcset="logo-badge.png 512w, logo-badge@2x.png 800w" sizes="62px" alt="Tuff Bros Mobile Detailing" class="logo-img" width="512" height="512">
       </picture>
     </a>
@@ -210,8 +210,8 @@
     </div>
     <div class="hero-media">
       <picture>
-        <source srcset="work-camaro.webp" type="image/webp">
-        <img src="work-camaro.jpg" sizes="(max-width: 860px) 92vw, 46vw" alt="Freshly detailed red Chevrolet Camaro ZL1 gleaming in a driveway during a mobile detail" width="1400" height="1050" fetchpriority="high">
+        <source srcset="work-camaro-480.webp 480w, work-camaro-800.webp 800w, work-camaro-1200.webp 1200w, work-camaro-1400.webp 1400w" sizes="(max-width: 496px) calc(100vw - 36px), (max-width: 860px) 460px, (max-width: 1180px) calc((100vw - 100px) * 0.475), 513px" type="image/webp">
+        <img src="work-camaro.jpg" sizes="(max-width: 496px) calc(100vw - 36px), (max-width: 860px) 460px, (max-width: 1180px) calc((100vw - 100px) * 0.475), 513px" alt="Freshly detailed red Chevrolet Camaro ZL1 gleaming in a driveway during a mobile detail" width="1400" height="1050" fetchpriority="high">
       </picture>
       <div class="hero-badge">
         <span class="hero-badge-score">5.0</span>
@@ -359,8 +359,8 @@
   <div class="container ceramic-grid">
     <div class="ceramic-media">
       <picture>
-        <source srcset="porsche-ceramic.webp" type="image/webp">
-        <img src="porsche-ceramic.jpg" alt="Gray Porsche 911 Turbo S with a deep, glossy ceramic-coated finish in a driveway" width="1400" height="1050">
+        <source srcset="porsche-ceramic-480.webp 480w, porsche-ceramic-800.webp 800w, porsche-ceramic-1200.webp 1200w, porsche-ceramic-1400.webp 1400w" sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 860px) calc(100vw - 44px), (max-width: 1180px) calc((100vw - 100px) * 0.475), 513px" type="image/webp">
+        <img src="porsche-ceramic.jpg" loading="lazy" decoding="async" alt="Gray Porsche 911 Turbo S with a deep, glossy ceramic-coated finish in a driveway" width="1400" height="1050">
       </picture>
     </div>
     <div class="ceramic-copy">
@@ -407,7 +407,7 @@
     <div class="gallery-grid">
       <figure class="gallery-item">
         <picture>
-          <source srcset="work-camaro.webp" type="image/webp">
+          <source srcset="work-camaro-480.webp 480w, work-camaro-800.webp 800w, work-camaro-1200.webp 1200w, work-camaro-1400.webp 1400w" sizes="(max-width: 560px) calc(100vw - 36px), (max-width: 860px) calc((100vw - 66px) / 2), 360px" type="image/webp">
           <img src="work-camaro.jpg" alt="Glossy red Chevrolet Camaro after a full exterior detail" loading="lazy" width="1400" height="1050">
         </picture>
         <figcaption>Sports Car Detail</figcaption>
@@ -826,7 +826,7 @@
     <div class="footer-brand">
       <a href="#top" class="logo logo-footer" aria-label="Tuff Bros Mobile Detailing — home">
         <picture>
-          <source srcset="logo-badge.webp 512w, logo-badge@2x.webp 800w" sizes="96px" type="image/webp">
+          <source srcset="logo-badge-128.webp 128w, logo-badge-192.webp 192w, logo-badge-256.webp 256w" sizes="96px" type="image/webp">
           <img src="logo-badge.png" srcset="logo-badge.png 512w, logo-badge@2x.png 800w" sizes="96px" alt="Tuff Bros Mobile Detailing" width="512" height="512">
         </picture>
       </a>
