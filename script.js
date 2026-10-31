@@ -287,11 +287,11 @@ document.addEventListener('DOMContentLoaded', function () {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
 
-    fetch(form.action, {
+    (window.TuffOS ? window.TuffOS.submitQuote(form) : fetch(form.action, {
       method: 'POST',
       body: new FormData(form),
       headers: { 'Accept': 'application/json' }
-    })
+    }))
       .then(function (response) {
         if (response.ok) {
           quoteAccepted = true;

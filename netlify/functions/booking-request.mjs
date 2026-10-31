@@ -1,3 +1,4 @@
+import {enqueue as enqueueOS,attribution as osAttribution} from './lib/os-bridge.mjs';
 import crypto from 'node:crypto';
 import {
   BOOKING_CONFIG,
@@ -197,6 +198,7 @@ async function resumePhotoHandoff(record, sessionId, origin) {
     message: `Secure vehicle photos for Tuff Bros request ${record.requestId} (available for 30 days): ${photoReview.url}`
   });
   const completed = { ...record, photoReview, stage: 'complete', completedAt: new Date().toISOString() };
+  if(record.osEvent) await enqueueOS({...record.osEvent,notes:(record.osEvent.notes+'\nSecure vehicle photos (30 days): '+photoReview.url).slice(0,2500)});
   await bookingStore('booking-submissions').setJSON(sessionId, completed);
   return completed;
 }
@@ -251,6 +253,7 @@ export default async (request) => {
 
   const record = {
     requestId: requestNumber(),
+    osEvent: {id:crypto.randomUUID(),kind:'booking',at:new Date().toISOString(),...osAttribution(payload.attribution),name:payload.customer.firstName+' '+payload.customer.lastName,phone:payload.customer.phone,email:payload.customer.email,address:payload.address.street+', '+payload.address.city+' AR '+payload.address.zip,vehicle:[payload.vehicle.year,payload.vehicle.make,payload.vehicle.model].join(' '),service:getService(payload.serviceId).name,notes:'Preferred date: '+payload.appointment.date+' · '+payload.appointment.window+' (pending owner review). '+payload.vehicle.notes},
     stage: 'processing',
     status: evaluation.initialStatus,
     date: payload.appointment.date,

@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "node --test test/**/*.test.mjs",
+    "test": "node --experimental-test-module-mocks --test test/**/*.test.mjs",
     "check": "node --check booking-config.js && node --check book/booking.js && for file in netlify/functions/*.mjs netlify/functions/lib/*.mjs; do node --check \"$file\"; done"
   },
   "dependencies": {

@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {readFileSync} from 'node:fs';
+import {attribution,session} from '../netlify/functions/lib/os-bridge.mjs';
+test('attribution excludes query strings and conversation cookies isolate customers',()=>{assert.equal(attribution({path:'/book/?email=private@example.com',utm_source:'google'}).path,'/book/');const a=session(new Request('https://example.com')),b=session(new Request('https://example.com'));assert.notEqual(a.id,b.id);assert.match(a.cookie,/HttpOnly; SameSite=Strict/);assert.equal(session(new Request('https://example.com',{headers:{cookie:a.cookie.split(';')[0]}})).id,a.id);});
+const source=readFileSync(new URL('../os-client.js',import.meta.url),'utf8');
+function setup(active,blocked=false){const calls=[];let serial=0;const storage={getItem(){if(blocked)throw Error('blocked');return null;},setItem(){if(blocked)throw Error('blocked');},removeItem(){}};const context={location:{search:'',pathname:'/'},URLSearchParams,crypto:{randomUUID:()=>`id-${++serial}`},sessionStorage:storage,AbortSignal,document:{addEventListener(){}},FormData:class {constructor(){return [['name','Test'],['phone','5015550100']][Symbol.iterator]();}},fetch:async(url,opts)=>{calls.push({url,opts});return {ok:url.includes('os-event')?active:true};},window:{sessionStorage:storage}};vm.runInNewContext(source,context);return {calls,client:context.window.TuffOS};}
+test('quote submissions retain the established Formspree route until OS is enabled',async()=>{const s=setup(false);await s.client.submitQuote({action:'https://formspree.io/f/test'});assert.equal(s.calls[1].url,'https://formspree.io/f/test');});
+test('enabled quotes go to the durable OS queue and tolerate unavailable browser storage',async()=>{const s=setup(true,true);await s.client.submitQuote({});const request=s.calls[1];assert.equal(request.url,'/.netlify/functions/os-event');assert.equal(JSON.parse(request.opts.body).kind,'quote');assert.equal(JSON.parse(request.opts.body).phone,'5015550100');});
