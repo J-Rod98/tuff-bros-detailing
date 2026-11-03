@@ -8,7 +8,7 @@ export function responseDetails(v,snapshot,snapshotHash,at,appointments=snapshot
  if(!contact.name||!contact.street||!contact.city||!contact.state||!/^\d{5}(-\d{4})?$/.test(contact.zip))throw Error('Enter your name and complete service address, including ZIP code.');
  if(contact.phone&&(!/^\+?[\d\s().-]{8,30}$/.test(contact.phone)||!/^[1-9]\d{7,14}$/.test(contact.phone.replace(/\D/g,''))))throw Error('Enter a complete phone number.');
  if(addressText(contact).length>300)throw Error('Please shorten the service address to 300 characters.');
- if(contact.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email))throw Error('Enter a valid email address.');
+ if(contact.email&&!/^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i.test(contact.email))throw Error('Enter a valid email address.');
  const proposal=appointments?.[option.id],choice=v.scheduling?.response;let date='',startTime='';
  if(choice==='Proposed time accepted'){if(!proposal||!day(proposal.date)||!time(proposal.startTime))throw Error('No proposed appointment is available. Request your preferred date and time.');if(v.scheduling.date!==proposal.date||v.scheduling.startTime!==proposal.startTime)throw Error('The proposed appointment changed. Refresh and review it before responding.');date=proposal.date;startTime=proposal.startTime;}
  else if(choice==='Alternative requested'){date=v.scheduling.date;startTime=v.scheduling.startTime;if(!day(date)||!time(startTime))throw Error('Choose your preferred appointment date and time.');}
