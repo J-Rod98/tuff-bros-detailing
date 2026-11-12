@@ -33,10 +33,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Fire a Google Analytics event only if gtag is loaded (safe no-op otherwise)
   function trackEvent(name, params) {
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', name, params || {});
-    }
+    try {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', name, params || {});
+      }
+    } catch (_) { /* Measurement must never interrupt a customer action. */ }
   }
+
+  // Count quote entry points without sending URL parameters or customer fields.
+  document.querySelectorAll('a[href*="#quote"]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      trackEvent('quote_cta_click', {
+        form_id: 'quoteForm',
+        link_location: link.className || 'link'
+      });
+    });
+  });
 
   // ---- Sticky header shadow on scroll ----
   var header = document.getElementById('siteHeader');
@@ -185,6 +197,36 @@ document.addEventListener('DOMContentLoaded', function () {
   // Service and location pages still store attribution for a later visit to
   // the home-page quote form, but they do not have fields to populate.
   if (!form) return;
+
+  // Measure actual form exposure and the first edit, once per page load.
+  var quoteViewed = false;
+  function recordQuoteView() {
+    if (quoteViewed) return;
+    quoteViewed = true;
+    trackEvent('quote_form_view', { form_id: 'quoteForm' });
+  }
+  if ('IntersectionObserver' in window) {
+    var quoteObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        document.body.classList.toggle('quote-form-visible', entry.isIntersecting);
+        if (entry.isIntersecting) recordQuoteView();
+      });
+    });
+    quoteObserver.observe(form);
+  }
+  var quoteStarted = false;
+  function recordQuoteStart() {
+    if (quoteStarted) return;
+    quoteStarted = true;
+    recordQuoteView();
+    trackEvent('quote_form_start', { form_id: 'quoteForm' });
+  }
+  form.addEventListener('input', recordQuoteStart);
+  form.addEventListener('change', recordQuoteStart);
+  form.addEventListener('invalid', function (event) {
+    var extras = event.target.closest('.quote-extras');
+    if (extras) extras.open = true;
+  }, true);
 
   // If the booking flow determined that this vehicle needs a custom quote, carry
   // the non-sensitive context into the existing Formspree workflow. Photos are
