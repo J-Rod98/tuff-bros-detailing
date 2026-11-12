@@ -2,9 +2,8 @@
   'use strict';
   var endpoint = '/.netlify/functions/os-event';
   var enabled = fetch(endpoint, {credentials:'same-origin',cache:'no-store',signal:AbortSignal.timeout(5000)}).then(function(r){return r.ok;}).catch(function(){return false;});
-  var attribution = {}, pendingQuoteId='';
-  ['utm_source','utm_campaign'].forEach(function(k){try{var value=new URLSearchParams(location.search).get(k)||sessionStorage.getItem('tuff_os_'+k)||'';if(value)sessionStorage.setItem('tuff_os_'+k,value);attribution[k]=value;}catch(_){}});
-  function send(value){return fetch(endpoint,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:crypto.randomUUID(),path:location.pathname},attribution,value))});}
+  var pendingQuoteId='';
+  function send(value){return fetch(endpoint,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:crypto.randomUUID(),path:location.pathname},value,window.TuffAttribution?window.TuffAttribution.read():{}))});}
   window.TuffOS={submitQuote:async function(form){if(!await enabled)return fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});var values=Object.fromEntries(new FormData(form));var saved=pendingQuoteId;try{saved=saved||sessionStorage.getItem('tuff_os_quote_id')||'';}catch(_){}if(!saved){saved=crypto.randomUUID();try{sessionStorage.setItem('tuff_os_quote_id',saved);}catch(_){}}pendingQuoteId=saved;var response=await send(Object.assign(values,{id:saved,kind:'quote'}));if(response.ok){pendingQuoteId='';try{sessionStorage.removeItem('tuff_os_quote_id');}catch(_){}}return response;}};
   document.addEventListener('DOMContentLoaded',async function(){
     if(!await enabled)return;

@@ -153,28 +153,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var submitBtn = document.getElementById('submitBtn');
 
   // ---- Preserve campaign attribution with the lead, not in Analytics ----
-  // UTMs may disappear if a visitor browses to another page before requesting
-  // a quote, so keep the first non-empty values for the current browser session.
-  var attributionKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
-  var attribution = {};
-  try {
-    attribution = JSON.parse(window.sessionStorage.getItem('tuffBrosAttribution') || '{}');
-  } catch (e) {
-    attribution = {};
-  }
-
+  // One shared attribution record follows the visitor across site pages.
   var query = new URLSearchParams(window.location.search);
-  attributionKeys.forEach(function (key) {
-    var value = query.get(key);
-    if (value && !attribution[key]) attribution[key] = value.slice(0, 150);
-  });
-  if (!attribution.landing_page) attribution.landing_page = window.location.pathname;
-
-  try {
-    window.sessionStorage.setItem('tuffBrosAttribution', JSON.stringify(attribution));
-  } catch (e) {
-    // Private browsing or storage restrictions should never block a quote request.
-  }
+  var attribution = window.TuffAttribution ? window.TuffAttribution.read() : {};
 
   function setHiddenField(id, value) {
     var field = document.getElementById(id);
@@ -186,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
   setHiddenField('utmMedium', attribution.utm_medium);
   setHiddenField('utmCampaign', attribution.utm_campaign);
   setHiddenField('utmContent', attribution.utm_content);
+  ['gclid','gbraid','wbraid','utm_term'].forEach(function(key) { setHiddenField(key, attribution[key]); });
 
   var referrerHost = 'direct_or_unknown';
   try {

@@ -66,17 +66,7 @@ function storageSet(key, value) {
 }
 
 function readAttribution() {
-  const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'];
-  const query = new URLSearchParams(window.location.search);
-  const data = {};
-  keys.forEach((key) => {
-    const value = query.get(key) || storageGet(`tuffbros_${key}`);
-    if (value) {
-      data[key] = value.slice(0, 250);
-      storageSet(`tuffbros_${key}`, data[key]);
-    }
-  });
-  return data;
+  return window.TuffAttribution ? window.TuffAttribution.read() : {};
 }
 
 function escapeHtml(value) {

@@ -112,7 +112,7 @@ function normalizePayload(input) {
     photos,
     terms: { acceptedAt: new Date().toISOString(), signature, version: termsInput.version },
     attribution: input.attribution && typeof input.attribution === 'object'
-      ? Object.fromEntries(['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid']
+      ? Object.fromEntries(['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'landing_page']
         .map((key) => [key, clean(input.attribution[key], 250)]).filter(([, value]) => value))
       : {}
   };
