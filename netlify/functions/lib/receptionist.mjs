@@ -9,6 +9,7 @@ function key(){if((process.env.BOOKING_SESSION_SECRET||'').length<32)throw Error
 function seal(value){const iv=crypto.randomBytes(12),cipher=crypto.createCipheriv('aes-256-gcm',key(),iv);return Buffer.concat([iv,cipher.update(JSON.stringify(value)),cipher.final(),cipher.getAuthTag()]).toString('base64');}
 function unseal(value){const b=Buffer.from(value,'base64'),d=crypto.createDecipheriv('aes-256-gcm',key(),b.subarray(0,12));d.setAuthTag(b.subarray(-16));return JSON.parse(Buffer.concat([d.update(b.subarray(12,-16)),d.final()]).toString());}
 export async function readConfig(){const row=await store().get('config',{type:'json'});return row?.sealed?{...defaults,...unseal(row.sealed)}:defaults;}
+export async function saveConfig(c){await store().setJSON('config',{sealed:seal(c)});}
 const status=c=>({websiteEnabled:!!c.websiteEnabled,phoneEnabled:!!c.phoneEnabled,aiConfigured:!!c.apiKey,phoneConfigured:!!(c.twilioToken&&c.twilioSid&&c.fromNumber),fromNumber:c.fromNumber||'',serviceArea:c.serviceArea||'',catalogCount:c.catalog.length,updatedAt:c.updatedAt||null,dailyLimit:c.dailyLimit||100,replyPreferences:normalizeReplyPreferences(c.replyPreferences)});
 export async function receptionistBridge(request,v){
  const path=new URL(request.url).pathname;
@@ -22,7 +23,7 @@ export async function receptionistBridge(request,v){
  }catch{return json({error:'Receptionist connection is unavailable.'},503);}
 }
 export async function pauseConversation(id){const row=await store().getWithMetadata('thread/'+id,{type:'json'});if(!row)return;if(row.data.lockUntil>Date.now())throw Error('A receptionist reply is in progress. Please try again shortly.');const r=await store().setJSON('thread/'+id,{...row.data,paused:true,needsHuman:true},{onlyIfMatch:row.etag});if(!r.modified)throw Error('Conversation changed. Please retry.');}
-async function takeBudget(limit){const id='budget/'+new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Chicago'}).format(new Date());for(let i=0;i<4;i++){const row=await store().getWithMetadata(id,{type:'json'}),count=row?.data?.count||0;if(count>=limit)return false;const r=await store().setJSON(id,{count:count+1},row?{onlyIfMatch:row.etag}:{onlyIfNew:true});if(r.modified)return true;}return false;}
+export async function takeBudget(limit){const id='budget/'+new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Chicago'}).format(new Date());for(let i=0;i<4;i++){const row=await store().getWithMetadata(id,{type:'json'}),count=row?.data?.count||0;if(count>=limit)return false;const r=await store().setJSON(id,{count:count+1},row?{onlyIfMatch:row.etag}:{onlyIfNew:true});if(r.modified)return true;}return false;}
 const stableId=text=>{const h=crypto.createHash('sha256').update(text).digest('hex');return h.slice(0,8)+'-'+h.slice(8,12)+'-4'+h.slice(13,16)+'-a'+h.slice(17,20)+'-'+h.slice(20,32);};
 export async function respond({id,eventId,message,name='',phone='',channel='website'}){
  const c=await readConfig();if(!(channel==='website'?c.websiteEnabled:c.phoneEnabled))return {enabled:false};
