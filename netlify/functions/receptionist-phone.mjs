@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import {readConfig,respond,voiceXml,greeting} from './lib/receptionist.mjs';
+import {readConfig,respond,voiceXml,openingMessage} from './lib/receptionist.mjs';
 import {enqueue,clean} from './lib/os-bridge.mjs';
 const xml=body=>new Response(body,{headers:{'Content-Type':'text/xml; charset=utf-8','Cache-Control':'no-store'}});
 export function validTwilio(request,params,token){
@@ -20,7 +20,7 @@ export default async request=>{
  const id=crypto.createHash('sha256').update('voice:'+call).digest('hex'),url=new URL(request.url),turn=Number(url.searchParams.get('turn')||0),message=clean(params.get('SpeechResult'),4000);
  if(!Number.isInteger(turn)||turn<0||turn>20)return xml(voiceXml('Thank you. Please contact the team through the website for further help.',null,{end:true}));
  const next=new URL(url.pathname,process.env.URL||url.origin);next.searchParams.set('turn',String(turn+1));
- if(!message)return xml(voiceXml(greeting,next.href));
+ if(!message)return xml(voiceXml(openingMessage(c),next.href));
  const eventId=uuid(call+':'+turn);
  try{
  await enqueue({id:eventId,kind:'chat',at:new Date().toISOString(),path:'/',source:'Phone receptionist',campaign:'',name:'Phone caller',phone:from,email:'',address:'',vehicle:'',service:'',notes:'Inbound forwarded call. No booking or SMS consent inferred.',conversationId:id,body:message,receptionist:{speaker:'customer',channel:'voice',needsHuman:false,summary:'',reason:''}});
