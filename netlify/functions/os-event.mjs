@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import {respond,readConfig} from './lib/receptionist.mjs';
 import {json,bookingStore,sameOrigin,takeRateLimit} from './lib/booking-security.mjs';
 import {enabled,enqueue,clean,attribution,session} from './lib/os-bridge.mjs';
 export default async request=>{
@@ -16,7 +17,10 @@ export default async request=>{
  const event={id:clean(v.id,36)||crypto.randomUUID(),kind,at:new Date().toISOString(),...attribution(v)};
  if(!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(event.id))return json({error:'Invalid request ID.'},400);
  if(['quote','chat'].includes(kind)){Object.assign(event,{name:clean(v.name,100),phone:clean(v.phone,30),email:clean(v.email,200),address:clean(v.city||v.address,300),vehicle:clean(v.vehicle,150),service:clean(v.service,200),notes:[clean(v.message,1800),...['condition','petHair','odor','ceramic','ceramic_package'].map(k=>v[k]?k+': '+clean(v[k],100):'')].filter(Boolean).join('\n')});if(!event.name||!/^[-+0-9().\s]{7,30}$/.test(event.phone)||event.phone.replace(/\D/g,'').length<7||(event.email&&!/^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i.test(event.email)))return json({error:'Enter your name and valid phone/email details.'},400);}
- if(kind==='chat'){event.body=clean(v.body,4000);event.conversationId=chat.id;if(!event.body)return json({error:'Enter a message.'},400);await bookingStore('os-conversations').setJSON(chat.id,{name:event.name,phone:event.phone,createdAt:event.at},{onlyIfNew:true});}
- await enqueue(event);return json({ok:true,id:event.id},200,kind==='chat'?headers:{});
+ if(kind==='chat'){event.body=clean(v.body,4000);event.conversationId=chat.id;event.receptionist={speaker:'customer',channel:'website',needsHuman:false,summary:'',reason:''};if(!event.body)return json({error:'Enter a message.'},400);await bookingStore('os-conversations').setJSON(chat.id,{name:event.name,phone:event.phone,createdAt:event.at},{onlyIfNew:true});}
+ await enqueue(event);
+ let receptionist=null;
+ if(kind==='chat'){try{const c=await readConfig();if(c.websiteEnabled)receptionist=await respond({id:chat.id,eventId:event.id,message:event.body,name:event.name,phone:event.phone});}catch{receptionist={unavailable:true};}}
+ return json({ok:true,id:event.id,receptionist},200,kind==='chat'?headers:{});
 };
 export const config={rateLimit:{action:'rate_limit',aggregateBy:'ip',windowSize:60,windowLimit:60}};
