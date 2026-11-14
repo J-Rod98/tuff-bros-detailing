@@ -9,3 +9,7 @@ Configure and test through **Tuff Bros OS → Virtual receptionist**. Website an
 No audio recording is requested. Speech uses Twilio Gather/Say. Incoming messages are queued before AI generation. Replies and bounded transcripts have deterministic receipts and conditional-write locks. AI failures go to human review; no booking, quote acceptance or SMS consent is inferred. The default daily limit is 100 AI attempts in America/Chicago, and each conversation is limited to 20 AI turns.
 
 Keep `netlify/functions/lib/receptionist-core.mjs` identical to the OS copy. Run `npm test`, `npm run check`, and `node --check os-client.js` before publishing. The new tests use in-memory stores, mocked model responses and disposable signatures. No real customer messages are sent.
+
+## Response preferences
+
+Tone, reply length, question style, an optional opening message, owner wording instructions, a reply example and avoided phrases are validated on the signed owner config route. Older encrypted configurations receive the existing friendly/short defaults. Saved settings are used on the next website/phone turn; the website welcome and enabled phone opening use the configured greeting and identify the virtual receptionist. Opening messages/examples cannot contain concrete price, booking or payment commitments. Channel switches, the API key and existing threads are preserved. The owner’s private test can preview unsaved settings without changing production configuration.

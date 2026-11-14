@@ -36,3 +36,10 @@ test('voice webhooks validate signatures, account/number and escape spoken custo
  let signed=url;for(const k of [...params.keys()].sort())signed+=k+params.get(k);const sig=crypto.createHmac('sha1','test-token').update(signed).digest('base64');const request=new Request(url,{method:'POST',body:params,headers:{'x-twilio-signature':sig}});assert.equal(validTwilio(request,params,'test-token'),true);assert.equal(validTwilio(request,params,'wrong'),false);assert.equal((await phoneAPI(new Request(url,{method:'POST',body:params}))).status,403);
  assert.match(voiceXml('<script>&',url),/&lt;script&gt;&amp;/);assert.match(voiceXml('Done',url,{end:true}),/<Hangup\/>/);
 });
+test('signed owner preferences preserve the key and reach the website responder without becoming public credentials',async()=>{
+ const before=await readConfig(),replyPreferences={tone:'professional',replyLength:'short',questionStyle:'one-at-a-time',greeting:'Welcome to Tuff Bros. How can we help?',instructions:'Use plain wording.',exampleReply:'What kind of vehicle do you have?',avoidPhrases:'absolutely'};
+ const response=await receptionistBridge(owner('config','POST'),{websiteEnabled:true,phoneEnabled:false,catalog:[],replyPreferences});assert.equal(response.status,200);const safe=await response.json();assert.deepEqual(safe.replyPreferences,replyPreferences);assert.equal(JSON.stringify(safe).includes(before.apiKey),false);assert.equal((await readConfig()).apiKey,before.apiKey);
+ const original=globalThis.fetch;let instructions='';globalThis.fetch=async(u,o)=>{instructions=JSON.parse(o.body).instructions;return ai(turn())()};
+ try{await respond({id:'c'.repeat(64),eventId:crypto.randomUUID(),message:'I need a clean',phone:'5015550102'});assert.match(instructions,/Use plain wording/);assert.match(instructions,/businesslike/);}finally{globalThis.fetch=original;}
+ assert.equal((await readConfig()).phoneEnabled,false);
+});
