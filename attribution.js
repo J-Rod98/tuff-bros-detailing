@@ -12,6 +12,7 @@
   }
   keys.forEach(function(k) { if(!known(value[k])) delete value[k]; });
   value.landing_page = value.landing_page || location.pathname;
+  if(!value.referrer_host){try{value.referrer_host=document.referrer?new URL(document.referrer).hostname:'';}catch(_){}}
   try { sessionStorage.setItem('tuffBrosAttribution', JSON.stringify(value)); } catch (_) {}
   window.TuffAttribution = {read:function() { return Object.assign({}, value); }};
 })();
