@@ -1,3 +1,4 @@
+import {writeJSON,eventHash} from './blob-json.mjs';
 import crypto from 'node:crypto';
 import {bookingStore,json} from './booking-security.mjs';
 const storage=()=>bookingStore('os-delivery');
@@ -9,14 +10,14 @@ async function settings(){const row=await storage().get('config',{type:'json'});
 export async function acknowledge(id){
  const receipts=bookingStore('os-event-receipts');
  const row=await receipts.getWithMetadata(id,{type:'json'});
- if(row&&!row.data.deliveredAt){const saved=await receipts.setJSON(id,{...row.data,deliveredAt:new Date().toISOString()},{onlyIfMatch:row.etag});if(!saved.modified)throw Error('Receipt changed; retry acknowledgement.');}
+ if(row&&!row.data.deliveredAt){const saved=await writeJSON(receipts,id,{...row.data,deliveredAt:new Date().toISOString()},{onlyIfMatch:row.etag});if(!saved.modified)throw Error('Receipt changed; retry acknowledgement.');}
  await queue().delete(id);
  await storage().delete('failure/'+id);
 }
 async function failure(event,status){
  const name='failure/'+event.id,row=await storage().getWithMetadata(name,{type:'json'}),old=row?.data||{},now=new Date().toISOString();
  const next={id:event.id,kind:event.kind,attempts:(old.attempts||0)+1,firstFailedAt:old.firstFailedAt||now,lastFailedAt:now,nextRetryAt:Date.now()+Math.min(3600000,60000*2**Math.min(old.attempts||0,6)),status};
- await storage().setJSON(name,next,row?{onlyIfMatch:row.etag}:{onlyIfNew:true});
+ await writeJSON(storage(),name,next,row?{onlyIfMatch:row.etag}:{onlyIfNew:true});
  if(next.attempts>=3&&['quote','booking','chat'].includes(event.kind))console.error('WEBSITE_LEAD_DELIVERY_ALERT',next);
 }
 export async function deliverEvent(event,{fetcher=fetch}={}){
@@ -53,6 +54,7 @@ export async function retryDelivery(){
 export async function deliveryBridge(request,v){const path=new URL(request.url).pathname;if(!path.includes('/delivery/'))return null;
  if(request.method==='GET'&&path.endsWith('/status'))return json(await deliveryStatus());
  if(request.method==='POST'&&path.endsWith('/config')){if(typeof v?.serviceToken!=='string'||!v.serviceToken||!/^[-a-zA-Z0-9]{64,128}$/.test(v.hmacKey||''))return json({error:'Invalid delivery configuration.'},400);await storage().setJSON('config',{sealed:seal({serviceToken:v.serviceToken,hmacKey:v.hmacKey})});return json({configured:true});}
+ if(request.method==='POST'&&path.endsWith('/restore')){if(!v?.event||v.event.id!==v.id||!/^[-a-f0-9]{36}$/.test(v.id))return json({error:'Invalid receipt.'},400);const hash=eventHash(v.event);await bookingStore('os-event-receipts').setJSON(v.id,{hash,event:v.event,deliveredAt:new Date().toISOString()});await acknowledge(v.id);return json({id:v.id,restored:true});}
  if(request.method==='POST'&&path.endsWith('/retry'))return json(await retryDelivery());
  return json({error:'Not found.'},404);
 }

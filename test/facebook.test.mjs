@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import {PAGE_ID,APP_ID,hash,validSignature,parseEvents,eligibleEvent} from '../netlify/functions/lib/facebook-core.mjs';
 const stores=new Map();let version=0;
-function getStore({name}){if(!stores.has(name))stores.set(name,new Map());const m=stores.get(name);return {async get(k){return structuredClone(m.get(k)?.data||null)},async getWithMetadata(k){return structuredClone(m.get(k)||null)},async setJSON(k,data,o={}){const old=m.get(k);if(o.onlyIfNew&&old||o.onlyIfMatch&&old?.etag!==o.onlyIfMatch)return {modified:false};m.set(k,{data:structuredClone(data),etag:String(++version)});return {modified:true};},async delete(k){m.delete(k)},list({prefix=''}={}){return(async function*(){yield {blobs:[...m.keys()].filter(k=>k.startsWith(prefix)).map(key=>({key}))}})()}}}
+function getStore({name}){if(!stores.has(name))stores.set(name,new Map());const m=stores.get(name);return {async set(k,v,o={}){return this.setJSON(k,JSON.parse(v),o);},async get(k){return structuredClone(m.get(k)?.data||null)},async getWithMetadata(k){return structuredClone(m.get(k)||null)},async setJSON(k,data,o={}){const old=m.get(k);if(o.onlyIfNew&&old||o.onlyIfMatch&&old?.etag!==o.onlyIfMatch)return {modified:false};m.set(k,{data:structuredClone(data),etag:String(++version)});return {modified:true};},async delete(k){m.delete(k)},list({prefix=''}={}){return(async function*(){yield {blobs:[...m.keys()].filter(k=>k.startsWith(prefix)).map(key=>({key}))}})()}}}
 mock.module('@netlify/blobs',{namedExports:{getStore}});
 const {saveConfig,readConfig}=await import('../netlify/functions/lib/receptionist.mjs');
 const {queueEvents,processEvent,facebookBridge}=await import('../netlify/functions/lib/facebook.mjs');
