@@ -1,3 +1,4 @@
+import {readLiveAppointment} from './os-delivery.mjs';
 import {writeJSON} from './blob-json.mjs';
 import {bookingStore,json,takeRateLimit} from './booking-security.mjs';
 import {createHash} from 'node:crypto';
@@ -18,5 +19,5 @@ export async function customerAppointment(request){
  if(!await takeRateLimit(request,{name:'customer-appointment',limit:50,windowMs:60000}))return json({error:'Please wait a minute.'},429);
  let v;try{const raw=await request.text();if(raw.length>2000)return json({error:'Too large.'},413);v=JSON.parse(raw);}catch{return json({error:'Invalid request.'},400);}if(!v||!hex(v.token)||v.action!=='view')return json({error:'This appointment link is invalid.'},404);
  const key=createHash('sha256').update(v.token).digest('hex'),q=await store().get(key,{type:'json'});if(!q||q.revoked||Date.parse(q.expiresAt)<=Date.now()||!q.snapshot)return json({error:'This appointment link has expired or was revoked. Please contact Tuff Bros.'},410);
- let snapshot;try{snapshot=cleanAppointment(q.snapshot);}catch{return json({error:'Appointment details are awaiting an update. Please contact Tuff Bros.'},503);}return json({appointment:{...snapshot,calendarUid:createHash('sha256').update('calendar-event:'+q.id).digest('hex')},updatedAt:q.updatedAt,expiresAt:q.expiresAt},200,{'Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'});
+ const live=await readLiveAppointment(key);if(live?.revoked)return json({error:'This appointment link has expired or was revoked. Please contact Tuff Bros.'},410);let snapshot;try{snapshot=cleanAppointment(live?.appointment||q.snapshot);}catch{return json({error:'Appointment details are awaiting an update. Please contact Tuff Bros.'},503);}return json({appointment:{...snapshot,calendarUid:createHash('sha256').update('calendar-event:'+q.id).digest('hex')},updatedAt:live?.updatedAt||q.updatedAt,expiresAt:live?.expiresAt||q.expiresAt,syncPending:!live},200,{'Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'});
 }

@@ -30,3 +30,9 @@ test('server delivery signs exact payload, survives outages, and exposes no serv
  assert.ok(!(await (await ownerAPI(owner(''))).json()).events.some(e=>e.id===v.id));
  const status=JSON.stringify(await deliveryStatus());assert.ok(!status.includes(serviceToken));assert.ok(!status.includes(key));assert.equal((await deliveryStatus()).configured,true);
 });
+test('live appointment lookup uses existing encrypted credentials, hash-only scope and exact-body signing',async()=>{
+ process.env.BOOKING_SESSION_SECRET='test-secure-storage-secret-'.repeat(3);const key='c'.repeat(96),serviceToken='test-service-token';assert.equal((await ownerAPI(owner('/delivery/config','POST',{hmacKey:key,serviceToken}))).status,200);
+ const {readLiveAppointment}=await import('../netlify/functions/lib/os-delivery.mjs'),tokenHash='a'.repeat(64),snapshot={appointment:{status:'Confirmed'},updatedAt:'2026-11-15T02:00:00Z',expiresAt:'2027-01-01T00:00:00Z'};
+ const result=await readLiveAppointment(tokenHash,{fetcher:async(url,opts)=>{assert.equal(new URL(url).pathname,'/api/website/appointment-view');assert.deepEqual(JSON.parse(opts.body),{tokenHash});assert.equal(opts.headers['OAI-Sites-Authorization'],'Bearer '+serviceToken);assert.equal(opts.headers['X-Website-Signature'],crypto.createHmac('sha256',key).update(['POST','/api/website/appointment-view',opts.headers['X-Website-Timestamp'],opts.body].join('\n')).digest('hex'));assert.equal(opts.redirect,'error');return Response.json(snapshot);}});assert.deepEqual(result,snapshot);
+ assert.deepEqual(await readLiveAppointment(tokenHash,{fetcher:async()=>new Response('',{status:410})}),{revoked:true});assert.equal(await readLiveAppointment(tokenHash,{fetcher:async()=>new Response('',{status:503})}),null);assert.equal(await readLiveAppointment(tokenHash,{fetcher:async()=>{throw Error('offline');}}),null);
+});
