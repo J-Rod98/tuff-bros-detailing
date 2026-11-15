@@ -60,3 +60,15 @@ export async function deliveryBridge(request,v){const path=new URL(request.url).
  if(request.method==='POST'&&path.endsWith('/retry'))return json(await retryDelivery());
  return json({error:'Not found.'},404);
 }
+
+// Same existing encrypted service connection; token hashes only, no booking writes.
+export async function readLiveAppointment(tokenHash,{fetcher=fetch}={}){
+ try{
+  const c=await settings();if(!c)return null;
+  const path='/api/website/appointment-view',body=JSON.stringify({tokenHash}),timestamp=String(Date.now());
+  const signature=crypto.createHmac('sha256',c.hmacKey).update(['POST',path,timestamp,body].join('\n')).digest('hex');
+  const r=await fetcher(OS+path,{method:'POST',headers:{'Content-Type':'application/json','OAI-Sites-Authorization':'Bearer '+c.serviceToken,'X-Website-Timestamp':timestamp,'X-Website-Signature':signature},body,redirect:'error',signal:AbortSignal.timeout(8000)});
+  if(r.status===410)return {revoked:true};if(!r.ok)return null;
+  const value=await r.json();return value?.appointment&&typeof value.updatedAt==='string'&&typeof value.expiresAt==='string'?value:null;
+ }catch{return null;}
+}
