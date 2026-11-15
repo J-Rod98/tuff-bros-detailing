@@ -1,3 +1,4 @@
+import {writeJSON} from './blob-json.mjs';
 import crypto from 'node:crypto';
 import { getStore } from '@netlify/blobs';
 
@@ -104,13 +105,13 @@ export async function takeRateLimit(request, { name, limit, windowMs }) {
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
     if (!current) {
-      const created = await store.setJSON(key, { count: 1, expiresAt: windowStart + windowMs }, { onlyIfNew: true });
+      const created = await writeJSON(store,key, { count: 1, expiresAt: windowStart + windowMs }, { onlyIfNew: true });
       if (created.modified) return true;
       continue;
     }
     const count = Number(current.data?.count || 0);
     if (count >= limit) return false;
-    const updated = await store.setJSON(key, { count: count + 1, expiresAt: windowStart + windowMs }, { onlyIfMatch: current.etag });
+    const updated = await writeJSON(store,key, { count: count + 1, expiresAt: windowStart + windowMs }, { onlyIfMatch: current.etag });
     if (updated.modified) return true;
   }
   return false;

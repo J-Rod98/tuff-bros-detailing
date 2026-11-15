@@ -33,8 +33,10 @@ export async function deliverEvent(event,{fetcher=fetch}={}){
 }
 export async function deliveryStatus(){
  const failures=[];for await(const page of storage().list({prefix:'failure/',paginate:true})){for(const b of page.blobs){const row=await storage().get(b.key,{type:'json'});if(row&&await queue().get(row.id,{type:'json'}))failures.push(row);}if(failures.length>=100)break;}
+ let pendingCount=0;for await(const page of queue().list({paginate:true})){pendingCount+=page.blobs.length;if(pendingCount>100)break;}
  const health=await storage().get('health',{type:'json'});
- return {configured:!!await settings(),health,failures,persistentFailures:failures.filter(f=>f.attempts>=3&&['quote','booking','chat'].includes(f.kind)).length};
+ let emailAlertConfigured=false;try{const {readConfig}=await import('./receptionist.mjs');const c=await readConfig();emailAlertConfigured=!!(c.resendKey&&c.fromEmail);}catch{}
+ return {configured:!!await settings(),emailAlertConfigured,pendingCount,pendingCountPartial:pendingCount>100,health,failures,persistentFailures:failures.filter(f=>f.attempts>=3&&['quote','booking','chat'].includes(f.kind)).length};
 }
 export async function retryDelivery(){
  let processed=0,delivered=0;const started=Date.now();
