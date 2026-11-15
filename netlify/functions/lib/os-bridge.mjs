@@ -1,3 +1,4 @@
+import {writeJSON,eventHash} from './blob-json.mjs';
 import crypto from 'node:crypto';
 import {bookingStore} from './booking-security.mjs';
 import {PUBLIC_KEY} from './os-public-key.mjs';
@@ -8,12 +9,11 @@ export async function enqueue(event){
  if(!enabled())throw Error('Website intake is unavailable.');
  // Receipt outlives queue acknowledgements. Never replace the original payload on retry.
  const receipts=bookingStore('os-event-receipts');
- const {at,...identity}=event;
- const hash=crypto.createHash('sha256').update(JSON.stringify(identity)).digest('hex');
- const created=await receipts.setJSON(event.id,{hash,event},{onlyIfNew:true});
+ const hash=eventHash(event);
+ const created=await writeJSON(receipts,event.id,{hash,event},{onlyIfNew:true});
  const prior=created.modified?{hash,event}:await receipts.get(event.id,{type:'json'});
  if(!prior||prior.hash!==hash)throw Object.assign(Error('Submission ID already used with different details.'),{status:409});
- if(!prior.deliveredAt){await store().setJSON(event.id,prior.event,{onlyIfNew:true});
+ if(!prior.deliveredAt){await writeJSON(store(),event.id,prior.event,{onlyIfNew:true});
   // A durable queue write is the acceptance boundary. Delivery failures remain queued.
   try{const {deliverEvent}=await import('./os-delivery.mjs');await deliverEvent(prior.event);}catch{console.error('Website inquiry queued for delivery retry',{id:event.id});}
  }
