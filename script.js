@@ -311,11 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
 
-    (window.TuffOS ? window.TuffOS.submitQuote(form) : fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' }
-    }))
+    (window.TuffOS ? window.TuffOS.submitQuote(form) : Promise.reject(new Error('Please reload and try again.')))
       .then(function (response) {
         if (response.ok) {
           quoteAccepted = true;

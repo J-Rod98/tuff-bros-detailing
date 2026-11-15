@@ -30,7 +30,7 @@ function setup({ analytics = true, analyticsThrows = false, metaThrows = false, 
   if (analytics) win.gtag = (...args) => { if (analyticsThrows) throw new Error('Analytics unavailable'); events.push(args); };
   class Observer { constructor(callback) { observerCallback = callback; } observe() {} }
   if (observe) win.IntersectionObserver = Observer;
-  const pending = [];
+  const pending = [];win.TuffOS={submitQuote(form){calls.push(['/.netlify/functions/os-event',form]);return new Promise((resolve,reject)=>pending.push({resolve,reject}));}};
   vm.runInNewContext(source, { document: doc, window: win, sessionStorage: storage, URL, URLSearchParams,
     IntersectionObserver: Observer,
     FormData: class {}, fetch(...args) { calls.push(args); return new Promise((resolve, reject) => pending.push({ resolve, reject })); } });
