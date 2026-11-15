@@ -1,0 +1,4 @@
+// A CRM copy of the existing validated appointment request; never creates a job.
+export function websiteBookingEvent(payload,{id,at,service,attribution}){
+ return {id,kind:'booking',at,...attribution,name:payload.customer.firstName+' '+payload.customer.lastName,phone:payload.customer.phone,email:payload.customer.email,city:payload.address.city,address:payload.address.street+', '+payload.address.city+' AR '+payload.address.zip,vehicle:[payload.vehicle.year,payload.vehicle.make,payload.vehicle.model].join(' '),service,message:payload.vehicle.notes,petHair:payload.conditions.petHair?'Yes':'No',odor:payload.conditions.strongOdor||payload.conditions.smoke?'Yes':'No',notes:['Preferred date: '+payload.appointment.date+' · '+payload.appointment.window+' (pending owner review).',payload.vehicle.notes,'Condition flags: '+JSON.stringify(payload.conditions),'Requested add-on IDs: '+payload.addOnIds.join(', ')].join('\n')};
+}

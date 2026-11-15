@@ -1,5 +1,7 @@
 import {enqueue as enqueueOS,attribution as osAttribution} from './lib/os-bridge.mjs';
 import crypto from 'node:crypto';
+import {writeJSON} from './lib/blob-json.mjs';
+import {websiteBookingEvent} from './lib/website-booking-event.mjs';
 import {
   BOOKING_CONFIG,
   BOOKING_STATUSES,
@@ -112,7 +114,7 @@ function normalizePayload(input) {
     photos,
     terms: { acceptedAt: new Date().toISOString(), signature, version: termsInput.version },
     attribution: input.attribution && typeof input.attribution === 'object'
-      ? Object.fromEntries(['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'landing_page']
+      ? Object.fromEntries(['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'landing_page', 'referrer_host']
         .map((key) => [key, clean(input.attribution[key], 250)]).filter(([, value]) => value))
       : {}
   };
@@ -130,12 +132,12 @@ async function reserveSlot({ date, window, requestId }) {
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
     if (!current) {
-      const created = await store.setJSON(key, record, { onlyIfNew: true });
+      const created = await writeJSON(store,key, record, { onlyIfNew: true });
       if (created.modified) return true;
       continue;
     }
     if (Number(current.data?.expiresAt || 0) > Date.now()) return false;
-    const replaced = await store.setJSON(key, record, { onlyIfMatch: current.etag });
+    const replaced = await writeJSON(store,key, record, { onlyIfMatch: current.etag });
     if (replaced.modified) return true;
   }
   return false;
@@ -193,6 +195,8 @@ async function createPhotoReview(record, sessionId, origin) {
 
 async function resumePhotoHandoff(record, sessionId, origin) {
   const photoReview = await createPhotoReview(record, sessionId, origin);
+  // Preserve the same photo capability and OS payload if the final handoff must retry.
+  await bookingStore('booking-submissions').setJSON(sessionId,{...record,photoReview});
   await addBookingNote({
     requestId: record.jobberRequestId,
     message: `Secure vehicle photos for Tuff Bros request ${record.requestId} (available for 30 days): ${photoReview.url}`
@@ -253,7 +257,7 @@ export default async (request) => {
 
   const record = {
     requestId: requestNumber(),
-    osEvent: {id:crypto.randomUUID(),kind:'booking',at:new Date().toISOString(),...osAttribution(payload.attribution),name:payload.customer.firstName+' '+payload.customer.lastName,phone:payload.customer.phone,email:payload.customer.email,address:payload.address.street+', '+payload.address.city+' AR '+payload.address.zip,vehicle:[payload.vehicle.year,payload.vehicle.make,payload.vehicle.model].join(' '),service:getService(payload.serviceId).name,notes:'Preferred date: '+payload.appointment.date+' · '+payload.appointment.window+' (pending owner review). '+payload.vehicle.notes},
+    osEvent: websiteBookingEvent(payload,{id:crypto.randomUUID(),at:new Date().toISOString(),service:getService(payload.serviceId).name,attribution:osAttribution(payload.attribution)}),
     stage: 'processing',
     status: evaluation.initialStatus,
     date: payload.appointment.date,
@@ -261,7 +265,7 @@ export default async (request) => {
     photos: payload.photos,
     createdAt: new Date().toISOString()
   };
-  const claimed = await submissions.setJSON(session.sessionId, record, { onlyIfNew: true });
+  const claimed = await writeJSON(submissions,session.sessionId, record, { onlyIfNew: true });
   if (!claimed.modified) return json({ message: 'Your request is already being processed. Please wait a moment before trying again.' }, 409);
   if (!await reserveSlot({ date: record.date, window: record.window, requestId: record.requestId })) {
     await submissions.setJSON(session.sessionId, { ...record, stage: 'slot-unavailable' });
