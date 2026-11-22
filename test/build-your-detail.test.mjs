@@ -98,7 +98,7 @@ test('club price applies only to Basic In & Out on a club schedule', () => {
   assert.equal(estimate({ size: 'car', service: 'basic-in-out', frequency: 'once' }).total, 150);
   assert.equal(estimate({ size: 'car', service: 'full-detail', frequency: 'monthly' }).total, 300);
   const p = buildRequest({ size: 'xl', service: 'basic-in-out', frequency: 'bimonthly', extras: ['pet-hair'], city: 'Bryant', street: '1 A', name: 'A', phone: '5015550100', vehicle: 'Tahoe', notes: '', date: '', window: '' });
-  assert.match(p.message, /Tuff Club price applied: \$195 per visit \(regular \$230\), 3-visit minimum accepted/);
+  assert.match(p.message, /Tuff Club price applied: \$195 per visit \(regular \$230\), stay-on-schedule terms accepted/);
   assert.match(p.message, /Estimate shown: from \$250/);
 });
 
@@ -117,4 +117,11 @@ test('Tuff Club page shows the same prices as the booking flow', async () => {
   const home = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const lowest = Math.min(...CLUB.schedules.map((s) => s.prices.car));
   assert.ok(home.includes('<strong>$' + lowest + '</strong>'));
+});
+
+test('Tuff Club late limits: 1 week for every 2 weeks, 2 weeks otherwise', async () => {
+  const { CLUB, CLUB_RULE } = await import('../book/pricing.js');
+  assert.deepEqual(CLUB.schedules.map((s) => [s.id, s.lateDays]), [['biweekly', 7], ['monthly', 14], ['bimonthly', 14]]);
+  assert.match(CLUB_RULE, /within 2 weeks of its scheduled date \(1 week for every-2-weeks members\)/);
+  assert.match(CLUB_RULE, /No minimum/);
 });

@@ -80,13 +80,17 @@ export const FREQUENCIES = [
 // Keep in step with /tuff-club/ and /terms/.
 export const CLUB = {
   service: 'basic-in-out',
-  minVisits: 3,
+  // No minimum. The club price holds while each visit happens within
+  // lateDays of its scheduled date; after that the next visit is regular price.
   schedules: [
-    { id: 'biweekly', label: 'Every 2 weeks', prices: { car: 105, suv: 125, xl: 160 } },
-    { id: 'monthly', label: 'Every month', prices: { car: 115, suv: 135, xl: 175 } },
-    { id: 'bimonthly', label: 'Every 2 months', prices: { car: 130, suv: 155, xl: 195 } }
+    { id: 'biweekly', label: 'Every 2 weeks', lateDays: 7, prices: { car: 105, suv: 125, xl: 160 } },
+    { id: 'monthly', label: 'Every month', lateDays: 14, prices: { car: 115, suv: 135, xl: 175 } },
+    { id: 'bimonthly', label: 'Every 2 months', lateDays: 14, prices: { car: 130, suv: 155, xl: 195 } }
   ]
 };
+
+// "Stay on schedule, keep your price", in customer words.
+export const CLUB_RULE = 'Stay on schedule, keep your price. Your club price holds as long as each visit happens within 2 weeks of its scheduled date (1 week for every-2-weeks members). Need to move a visit? Text us at least 24 hours ahead. If a visit is skipped or runs later than that, that visit is at the regular price, then you\u2019re back on your club price. If the vehicle has really been let go, we may recommend a Full Detail first. No minimum: cancel anytime. You pay after each visit.';
 
 export const clubSchedule = (id) => CLUB.schedules.find((s) => s.id === id) || null;
 
@@ -172,7 +176,7 @@ export function buildRequest(state) {
     'Last detailed: ' + (label(LAST_CLEANED, state.lastCleaned) || 'not answered'),
     'Requested: ' + dayText + ' · ' + label(WINDOWS, state.window),
     'How often: ' + (label(FREQUENCIES, state.frequency) || 'not answered') + (clubSchedule(state.frequency) ? ' (interested in Tuff Club)' : ''),
-    est.club ? 'Tuff Club price applied: ' + money(est.base) + ' per visit (regular ' + money(est.regular) + '), ' + CLUB.minVisits + '-visit minimum accepted' : '',
+    est.club ? 'Tuff Club price applied: ' + money(est.base) + ' per visit (regular ' + money(est.regular) + '), stay-on-schedule terms accepted' : '',
     'Policy accepted: $' + POLICY.deposit + ' deposit after confirmation, ' + POLICY.cancelHours + '-hour cancellation, $' + POLICY.extraDirt + ' per extra 30 min for heavy dirt (v' + POLICY.version + ')',
     state.notes ? 'Notes: ' + state.notes : ''
   ].filter(Boolean);
