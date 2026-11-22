@@ -1734,3 +1734,8 @@ summary:focus-visible {
 .extras-list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--line-2); color: var(--text); }
 .extras-list strong { color: var(--cream); white-space: nowrap; }
 @media (max-width: 700px) { .size-guide-list, .extras-list { grid-template-columns: 1fr; } }
+
+/* Build Your Detail call-out in the Pricing section */
+.byd-callout { max-width: 760px; margin: 0 auto 22px; display: flex; align-items: center; justify-content: center; gap: 14px 18px; flex-wrap: wrap; text-align: center; color: var(--text); }
+.byd-callout span { flex: 1 1 260px; max-width: 420px; text-align: left; }
+@media (max-width: 560px) { .byd-callout span { text-align: center; } }

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --experimental-test-module-mocks --test test/**/*.test.mjs",
-    "check": "node --check appointment/appointment.js && node --check appointment/calendar.js && node --check appointment/view.js && node --check booking-config.js && node --check book/booking.js && for file in netlify/functions/*.mjs netlify/functions/lib/*.mjs; do node --check \"$file\"; done"
+    "check": "node --check appointment/appointment.js && node --check appointment/calendar.js && node --check appointment/view.js && node --check booking-config.js && node --check book/book.js && node --check book/pricing.js && for file in netlify/functions/*.mjs netlify/functions/lib/*.mjs; do node --check \"$file\"; done"
   },
   "dependencies": {
     "@netlify/blobs": "^10.1.0",

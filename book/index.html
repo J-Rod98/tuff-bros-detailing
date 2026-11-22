@@ -3,24 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Request a Mobile Detailing Appointment | Tuff Bros</title>
-<meta name="description" content="Request a mobile detailing appointment with Tuff Bros in Little Rock, AR. Pick a service, share vehicle details and photos, and we'll confirm your time.">
-<meta name="robots" content="index,follow">
+<title>Book Mobile Detailing Online | Build Your Detail | Tuff Bros</title>
+<meta name="description" content="Build your detail online: pick your vehicle and service, see your price, and request a day. Tuff Bros mobile detailing in Little Rock and North Little Rock, AR.">
 <link rel="icon" type="image/png" href="/favicon-tb-2026-96.png">
 <link rel="canonical" href="https://tuffbrosdetailing.com/book/">
-<meta property="og:title" content="Request a Mobile Detailing Appointment | Tuff Bros">
-<meta property="og:description" content="Choose a preferred appointment for a standard detailing service. Every request is reviewed before confirmation.">
+<meta property="og:title" content="Book Mobile Detailing Online | Build Your Detail | Tuff Bros">
+<meta property="og:description" content="Build your detail online: pick your vehicle and service, see your price, and request a day. Tuff Bros mobile detailing in Little Rock and North Little Rock, AR.">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://tuffbrosdetailing.com/book/">
 <meta property="og:image" content="https://tuffbrosdetailing.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://tuffbrosdetailing.com/og-image.jpg">
-
 <link rel="preload" href="/fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/barlow-condensed-latin-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/home-fonts.css?v=1">
-
-<!-- Google Analytics 4 (Measurement ID: G-30PYXCXW4W) -->
 <script src="/attribution.js?v=1" defer></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-30PYXCXW4W"></script>
 <script>
@@ -29,28 +28,25 @@
   gtag('js', new Date());
   gtag('config', 'G-30PYXCXW4W');
 </script>
-<script>
-  // Booking events are limited to anonymous service-flow actions. No contact,
-  // vehicle, address, photo, or payment data is sent to Meta.
-  (function (f, b, e, v, n, t, s) {
-    if (f.fbq) return;
-    n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
-    if (!f._fbq) f._fbq = n;
-    n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
-    t = b.createElement(e); t.async = true; t.src = v;
-    s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
-  })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-  window.fbq('init', '1360494595482934');
-  window.fbq('track', 'PageView');
-</script>
-
 <link rel="stylesheet" href="/styles.css?v=17-speed-contrast">
-<link rel="stylesheet" href="/book/booking.css?v=2">
+<link rel="stylesheet" href="/book/book.css?v=1">
+<link rel="preload" href="/book/img/size-car.webp" as="image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://tuffbrosdetailing.com/"},
+    {"@type": "ListItem", "position": 2, "name": "Book Online", "item": "https://tuffbrosdetailing.com/book/"}
+  ]
+}
+</script>
 </head>
-<body class="booking-page">
-<a class="skip-link" href="#main-content">Skip to booking</a>
+<body class="byd-page">
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
-<header class="site-header booking-header" id="siteHeader">
+
+<header class="site-header" id="siteHeader">
   <div class="container header-inner">
     <a href="/" class="logo" aria-label="Tuff Bros Mobile Detailing — home">
       <picture>
@@ -58,64 +54,253 @@
         <img src="/logo-badge.png" srcset="/logo-badge.png 512w, /logo-badge@2x.png 800w" sizes="52px" alt="Tuff Bros Mobile Detailing" class="logo-img" width="512" height="512">
       </picture>
     </a>
-    <nav class="booking-nav" aria-label="Booking navigation">
-      <a href="/">Home</a>
-      <a href="/#quote">Get a Free Quote</a>
-      <a href="tel:+15015004306" data-analytics-event="call_click" data-analytics-location="booking_header">Call (501) 500-4306</a>
+    <nav class="main-nav" id="mainNav" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/ceramic-coating-little-rock-ar/">Ceramic Coating</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/service-areas/">Service Areas</a>
+      <a href="/gift-cards/">Gift Cards</a>
+      <a href="/#faq">FAQ</a>
+      <a href="tel:+15015004306" class="nav-call">Call (501) 500-4306</a>
+      <a href="/#quote" class="btn btn-primary btn-sm nav-quote">Get a Quote</a>
     </nav>
+    <div class="header-actions">
+      <a href="tel:+15015004306" class="header-phone"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg><span>(501) 500-4306</span></a>
+      <a href="/#quote" class="btn btn-primary btn-sm">Get a Quote</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
 <main id="main-content">
-  <section class="booking-shell">
-    <div class="booking-intro">
-      <p class="booking-kicker">Standard service reservation request</p>
-      <h1>Request your preferred appointment.</h1>
-      <p>Choose a standard service, share a few details and photos, and we’ll review everything before confirming. Nothing is officially booked until Tuff Bros confirms it.</p>
-      <p class="booking-fast-path">Need a deep clean, ceramic coating, paint work, fleet service, or help deciding? <a href="/#quote" data-analytics-event="quote_redirected" data-analytics-location="booking_intro">Get a free quote instead.</a></p>
-    </div>
+<section class="page-hero byd-hero">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">/</span><span aria-current="page">Book Online</span></nav>
+    <p class="section-eyebrow left">Book Online</p>
+    <h1>Build Your Detail</h1>
+    <p class="lead">Pick your vehicle and service, watch your price as you go, then request a day. We confirm by text and come to you.</p>
+    <ul class="byd-promises">
+      <li>Price up front</li>
+      <li>No payment now</li>
+      <li>Missed a spot? We come back free</li>
+    </ul>
+  </div>
+</section>
 
-    <div class="booking-card" id="bookingApp">
-      <div class="booking-progress-wrap">
-        <div class="booking-progress-copy">
-          <span id="bookingStepLabel">Step 1 of 8</span>
-          <strong id="bookingStepTitle">Choose Service</strong>
-        </div>
-        <ol class="booking-progress" aria-label="Booking progress">
-          <li class="is-current" aria-current="step"><span>1</span><em>Service</em></li>
-          <li><span>2</span><em>Vehicle</em></li>
-          <li><span>3</span><em>Details</em></li>
-          <li><span>4</span><em>Condition</em></li>
-          <li><span>5</span><em>Photos</em></li>
-          <li><span>6</span><em>Address</em></li>
-          <li><span>7</span><em>Time</em></li>
-          <li><span>8</span><em>Review</em></li>
+<section class="byd-section" id="bydTop">
+  <div class="container">
+    <div class="byd-layout" id="bydApp">
+      <form id="byd" class="byd-form" novalidate>
+        <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <ol class="byd-progress" aria-label="Steps">
+          <li data-for="1"><button type="button"><span>1</span>Vehicle</button></li>
+          <li data-for="2"><button type="button"><span>2</span>Service</button></li>
+          <li data-for="3"><button type="button"><span>3</span>Extras</button></li>
+          <li data-for="4"><button type="button"><span>4</span>Where &amp; when</button></li>
+          <li data-for="5"><button type="button"><span>5</span>You</button></li>
         </ol>
-      </div>
 
-      <div id="bookingNotice" class="booking-notice" role="status" aria-live="polite" hidden></div>
-      <form id="bookingForm" novalidate>
-        <div id="bookingStep" class="booking-step" aria-live="polite"></div>
-        <div class="booking-actions" id="bookingActions"></div>
+        <fieldset class="byd-step" data-step="1">
+          <legend>What are we detailing?</legend>
+          <p class="byd-help">Pick the closest size. It sets your price.</p>
+          <div class="byd-sizes" id="bydSizes"></div>
+        </fieldset>
+
+        <fieldset class="byd-step" data-step="2" hidden>
+          <legend>Choose your service</legend>
+          <label class="byd-switch"><input type="checkbox" id="bydReturning"><span>I&rsquo;m a returning Tuff Bros customer</span></label>
+          <div class="byd-options" id="bydServices"></div>
+          <p class="byd-help" id="bydMaintNote">Quick maintenance visits are for returning customers, after a first Full Detail or Deep Interior Clean.</p>
+          <p class="byd-help">Need ceramic coating, paint correction, a boat or an RV? <a href="/#quote">Get a custom quote</a>.</p>
+        </fieldset>
+
+        <fieldset class="byd-step" data-step="3" hidden>
+          <legend>Anything extra?</legend>
+          <p class="byd-help">Tap anything your vehicle needs. Skip this if none apply.</p>
+          <div class="byd-options" id="bydExtras"></div>
+          <h3 class="byd-sub" id="bydLastLabel">When was it last detailed?</h3>
+          <div class="byd-chips" id="bydLast" role="radiogroup" aria-labelledby="bydLastLabel"></div>
+          <p class="byd-help">We confirm extras from your photos, and again when we arrive, before we start.</p>
+        </fieldset>
+
+        <fieldset class="byd-step" data-step="4" hidden>
+          <legend>Where and when?</legend>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="bydCity">City <span class="req" aria-hidden="true">*</span></label>
+              <select id="bydCity" name="city" required><option value="">Select your city</option></select>
+              <p class="byd-area" id="bydAreaNote" hidden></p>
+            </div>
+            <div class="form-row" id="bydOtherCity" hidden>
+              <label for="bydOtherCityInput">Your town</label>
+              <input id="bydOtherCityInput" name="otherCity" maxlength="60" autocomplete="address-level2">
+            </div>
+            <div class="form-row form-row-full">
+              <label for="bydStreet">Street address <span class="req" aria-hidden="true">*</span></label>
+              <input id="bydStreet" name="street" maxlength="200" autocomplete="street-address" placeholder="Where the vehicle will be" required>
+            </div>
+            <div class="form-row">
+              <label for="bydZip">ZIP <span class="optional">(optional)</span></label>
+              <input id="bydZip" name="zip" maxlength="10" inputmode="numeric" autocomplete="postal-code">
+            </div>
+          </div>
+          <h3 class="byd-sub" id="bydDayLabel">Preferred day</h3>
+          <div class="byd-days" id="bydDays" role="radiogroup" aria-labelledby="bydDayLabel"></div>
+          <h3 class="byd-sub" id="bydWindowLabel">Time of day</h3>
+          <div class="byd-chips" id="bydWindows" role="radiogroup" aria-labelledby="bydWindowLabel"></div>
+          <p class="byd-help">This is a request. We text you to confirm the exact time.</p>
+        </fieldset>
+
+        <fieldset class="byd-step" data-step="5" hidden>
+          <legend>Last step: about you</legend>
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="bydName">Name <span class="req" aria-hidden="true">*</span></label>
+              <input id="bydName" name="name" maxlength="100" autocomplete="name" required>
+            </div>
+            <div class="form-row">
+              <label for="bydPhone">Mobile number <span class="req" aria-hidden="true">*</span></label>
+              <input id="bydPhone" name="phone" type="tel" maxlength="30" autocomplete="tel" required>
+            </div>
+            <div class="form-row">
+              <label for="bydVehicle">Year, make and model <span class="req" aria-hidden="true">*</span></label>
+              <input id="bydVehicle" name="vehicle" maxlength="120" placeholder="e.g. 2021 Toyota RAV4" required>
+            </div>
+            <div class="form-row">
+              <label for="bydEmail">Email <span class="optional">(optional)</span></label>
+              <input id="bydEmail" name="email" type="email" maxlength="200" autocomplete="email">
+            </div>
+            <div class="form-row form-row-full">
+              <label for="bydNotes">Anything we should know? <span class="optional">(optional)</span></label>
+              <textarea id="bydNotes" name="notes" rows="3" maxlength="800" placeholder="Gate code, parking, problem spots&hellip;"></textarea>
+            </div>
+          </div>
+          <h3 class="byd-sub" id="bydFreqLabel">How often do you want it this clean? <span class="optional">(optional)</span></h3>
+          <div class="byd-chips" id="bydFreq" role="radiogroup" aria-labelledby="bydFreqLabel"></div>
+          <div class="byd-review">
+            <h3>Your request</h3>
+            <ul id="bydReview"></ul>
+            <p class="byd-help">No payment now. We text you to confirm your time and final price. By sending, you agree to our <a href="/terms/">service terms</a>.</p>
+          </div>
+        </fieldset>
+
+        <p class="form-error byd-error" id="bydError" role="alert" hidden></p>
+        <div class="byd-nav">
+          <button type="button" class="btn btn-outline" id="bydBack" hidden>Back</button>
+          <button type="button" class="btn btn-primary btn-lg" id="bydNext">Next</button>
+        </div>
       </form>
+
+      <aside class="byd-summary" aria-label="Your detail so far">
+        <h2>Your detail</h2>
+        <dl id="bydSummary" aria-live="polite"></dl>
+        <div class="byd-total">
+          <span id="bydTotalLabel">Starting price</span>
+          <strong id="bydTotal" aria-live="polite">Pick a vehicle</strong>
+        </div>
+        <p class="byd-fine" id="bydPhotoNote" hidden>Some items are priced after we see photos.</p>
+        <p class="byd-fine">Final price is confirmed from your photos. No payment now.</p>
+        <p class="byd-promise"><strong>Our promise:</strong> if we missed something, tell us within 24 hours and we&rsquo;ll come back and clean it, free.</p>
+      </aside>
     </div>
 
-    <aside class="booking-assurance" aria-label="Booking request assurance">
-      <div><strong>Request, not confirmation</strong><span>Every appointment is personally reviewed first.</span></div>
-      <div><strong>Fair, protected pricing</strong><span>Condition and add-ons are reviewed before any final price.</span></div>
-      <div><strong>Mobile service</strong><span>We’ll confirm access, location, and your preferred arrival window.</span></div>
-    </aside>
-  </section>
+    <div class="byd-done" id="bydDone" tabindex="-1" hidden>
+      <p class="byd-done-check" aria-hidden="true">&#10003;</p>
+      <h2>Thanks, <span id="bydFirst"></span>! Your request is in.</h2>
+      <p class="byd-code">Request <strong id="bydCode"></strong></p>
+      <ul class="byd-done-list" id="bydDoneSummary"></ul>
+      <p class="byd-done-total">Starting price <strong id="bydDoneTotal"></strong></p>
+      <h3>What happens next</h3>
+      <ol class="byd-next-steps">
+        <li><strong>Text us 2 to 4 photos</strong> of the inside and outside. This locks in your price.</li>
+        <li><strong>We text you</strong> to confirm your time and final price.</li>
+        <li><strong>We come to you</strong> with our own equipment and water.</li>
+      </ol>
+      <a class="btn btn-primary btn-lg" id="bydSms" href="sms:+15015004306">Text My Photos</a>
+      <p class="byd-help">Or call <a href="tel:+15015004306">(501) 500-4306</a>.</p>
+    </div>
+  </div>
+</section>
+
+<div class="byd-bar" id="bydBar">
+  <span>Starting price <strong id="bydBarTotal">&ndash;</strong></span>
+  <button type="button" class="btn btn-primary" id="bydBarNext">Next</button>
+</div>
 </main>
 
-<footer class="booking-footer">
-  <div class="container">
-    <p>Prefer to talk it through? Call or text <a href="tel:+15015004306" data-analytics-event="call_click" data-analytics-location="booking_footer">(501) 500-4306</a>.</p>
-    <p><a href="/privacy/">Privacy Policy</a> <span aria-hidden="true">·</span> <a href="/terms/">Booking Terms</a> <span aria-hidden="true">·</span> <a href="/#quote">Get a Free Quote</a></p>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="logo logo-footer" aria-label="Tuff Bros Mobile Detailing — home">
+        <picture>
+          <source srcset="/logo-badge-128.webp 128w, /logo-badge-192.webp 192w, /logo-badge-256.webp 256w" sizes="96px" type="image/webp">
+          <img src="/logo-badge.png" srcset="/logo-badge.png 512w, /logo-badge@2x.png 800w" sizes="96px" alt="Tuff Bros Mobile Detailing" width="512" height="512">
+        </picture>
+      </a>
+      <p>Professional mobile car detailing brought right to your driveway across the greater Little Rock area. Pro detailing experience since 2017.</p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/tuffbros/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.facebook.com/profile.php?id=61580410613350" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://share.google/C6yQP4xu4Yk4qk89D" target="_blank" rel="noopener">Google Reviews</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="/mobile-detailing-little-rock-ar/">Mobile Detailing</a></li>
+        <li><a href="/interior-detailing-little-rock-ar/">Interior Detailing</a></li>
+        <li><a href="/full-service-car-detailing-little-rock-ar/">Full Detail Package</a></li>
+        <li><a href="/ceramic-coating-little-rock-ar/">Ceramic Coating</a></li>
+        <li><a href="/paint-correction-little-rock-ar/">Paint Correction</a></li>
+        <li><a href="/headlight-restoration-little-rock-ar/">Headlight Restoration</a></li>
+        <li><a href="/trim-restoration-little-rock-ar/">Trim Restoration</a></li>
+        <li><a href="/fleet-detailing-little-rock-ar/">Fleet Detailing</a></li>
+        <li><a href="/pet-hair-removal-car-detailing-little-rock-ar/">Pet Hair Removal</a></li>
+        <li><a href="/odor-removal-car-detailing-little-rock-ar/">Odor Removal</a></li>
+        <li><a href="/boat-detailing-little-rock-ar/">Boat Detailing</a></li>
+        <li><a href="/motorcycle-detailing-little-rock-ar/">Motorcycle Detailing</a></li>
+        <li><a href="/rv-detailing-little-rock-ar/">RV Detailing</a></li>
+        <li><a href="/ceramic-coating-maintenance-little-rock-ar/">Ceramic Coating Care Guide</a></li>
+        <li><a href="/book/">Book Online</a></li>
+        <li><a href="/gift-cards/">Gift Cards</a></li>
+        <li><a href="/reviews/">Reviews</a></li>
+        <li><a href="/#pricing">Pricing</a></li>
+        <li><a href="/#quote">Get a Quote</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Service Areas</h4>
+      <ul>
+        <li><a href="/service-areas/north-little-rock-ar/">North Little Rock</a></li>
+        <li><a href="/service-areas/little-rock-ar/">Little Rock</a></li>
+        <li><a href="/service-areas/sherwood-ar/">Sherwood</a></li>
+        <li><a href="/service-areas/maumelle-ar/">Maumelle</a></li>
+        <li><a href="/service-areas/jacksonville-ar/">Jacksonville</a></li>
+        <li><a href="/service-areas/conway-ar/">Conway</a></li>
+        <li><a href="/service-areas/cabot-ar/">Cabot</a></li>
+        <li><a href="/service-areas/bryant-ar/">Bryant</a></li>
+        <li><a href="/service-areas/benton-ar/">Benton</a></li>
+        <li><a href="/service-areas/">All Service Areas</a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-contact">
+      <h4>Get in Touch</h4>
+      <a href="tel:+15015004306" class="footer-phone">(501) 500-4306</a>
+      <p><a href="sms:+15015004306">Text photos for a faster quote</a></p>
+      <a href="/#quote" class="btn btn-primary btn-sm">Request a Quote</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p>&copy; <span id="year"></span> Tuff Bros Mobile Detailing &mdash; Little Rock &amp; North Little Rock, AR <span class="footer-legal"><a href="/privacy/">Privacy Policy</a></span></p>
+    </div>
   </div>
 </footer>
-
 <script src="/os-client.js?v=4" defer></script>
-<script type="module" src="/book/booking.js?v=5"></script>
+<script src="/script.js?v=13"></script>
+<script type="module" src="/book/book.js?v=1"></script>
 </body>
 </html>

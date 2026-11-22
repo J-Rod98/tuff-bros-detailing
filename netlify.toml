@@ -40,18 +40,6 @@
     X-Robots-Tag = "noindex, nofollow, noarchive"
     Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests"
 
-# Online booking via Jobber is retired; send visitors to the quote form.
-[[redirects]]
-  from = "/book"
-  to = "/#quote"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/book/"
-  to = "/#quote"
-  status = 301
-  force = true
 
 # Misspelled URL that Google found linked externally
 [[redirects]]
