@@ -1739,3 +1739,13 @@ summary:focus-visible {
 .byd-callout { max-width: 760px; margin: 0 auto 22px; display: flex; align-items: center; justify-content: center; gap: 14px 18px; flex-wrap: wrap; text-align: center; color: var(--text); }
 .byd-callout span { flex: 1 1 260px; max-width: 420px; text-align: left; }
 @media (max-width: 560px) { .byd-callout span { text-align: center; } }
+
+/* Tuff Club strip in the Pricing section */
+.club-strip { max-width: 980px; margin: 30px auto 0; display: grid; grid-template-columns: 1fr auto auto; gap: 18px 26px; align-items: center; padding: 22px 26px; background: linear-gradient(120deg, #1d1416, var(--panel)); border: 1px solid rgba(210,31,38,.45); border-radius: var(--radius-lg); }
+.club-strip h3 { margin: 0 0 6px; color: var(--cream); font-size: 1.6rem; }
+.club-strip p { margin: 0; color: var(--text); }
+.club-strip .price-tag { margin-bottom: 8px; color: #fff; background: var(--gold); border-color: var(--gold); }
+.club-strip-price { text-align: center; color: var(--muted); font-size: .85rem; }
+.club-strip-price strong { display: block; font-family: var(--font-head); font-size: 2.4rem; line-height: 1; color: var(--cream); }
+.service-card p a, .price-note a { color: var(--accent-text); }
+@media (max-width: 760px) { .club-strip { grid-template-columns: 1fr; text-align: left; } .club-strip-price { text-align: left; } .club-strip-price strong { display: inline; } }

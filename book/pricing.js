@@ -71,9 +71,32 @@ export const WINDOWS = [
 
 export const FREQUENCIES = [
   { id: 'once', label: 'Just this once' },
+  { id: 'biweekly', label: 'Every 2 weeks' },
   { id: 'monthly', label: 'Every month' },
-  { id: 'biweekly', label: 'Every 2 weeks' }
+  { id: 'bimonthly', label: 'Every 2 months' }
 ];
+
+// Tuff Club: Basic In & Out on a schedule, paid after each visit.
+// Keep in step with /tuff-club/ and /terms/.
+export const CLUB = {
+  service: 'basic-in-out',
+  minVisits: 3,
+  schedules: [
+    { id: 'biweekly', label: 'Every 2 weeks', prices: { car: 105, suv: 125, xl: 160 } },
+    { id: 'monthly', label: 'Every month', prices: { car: 115, suv: 135, xl: 175 } },
+    { id: 'bimonthly', label: 'Every 2 months', prices: { car: 130, suv: 155, xl: 195 } }
+  ]
+};
+
+export const clubSchedule = (id) => CLUB.schedules.find((s) => s.id === id) || null;
+
+// Club price per visit for a size, or null (oversized and one-time visits have none).
+export function clubPrice(frequency, size) {
+  const schedule = clubSchedule(frequency);
+  const sizeInfo = getSize(size);
+  if (!schedule || !sizeInfo || sizeInfo.custom) return null;
+  return schedule.prices[sizeInfo.id];
+}
 
 export const getSize = (id) => SIZES.find((s) => s.id === id) || null;
 export const getService = (id) => SERVICES.find((s) => s.id === id) || null;
@@ -89,18 +112,21 @@ export function extrasFor(service) {
   return EXTRAS.filter((extra) => extraFits(extra, service));
 }
 
-// Returns {base, extras:[{id,label,price}], total, custom, afterPhotos}.
+// Returns {base, regular, club, extras:[{id,label,price}], total, custom, afterPhotos}.
+// club: Basic In & Out on a Tuff Club schedule, so base is the club price.
 // custom: the vehicle size has no set price. afterPhotos: something is priced after photos.
-export function estimate({ size, service, extras = [] }) {
+export function estimate({ size, service, extras = [], frequency = '' }) {
   const sizeInfo = getSize(size);
   const serviceInfo = getService(service);
   const chosen = extras.map(getExtra).filter((extra) => extraFits(extra, serviceInfo));
   const custom = !!(sizeInfo && sizeInfo.custom);
-  const base = serviceInfo && sizeInfo && !custom ? serviceInfo.prices[sizeInfo.id] : null;
+  const regular = serviceInfo && sizeInfo && !custom ? serviceInfo.prices[sizeInfo.id] : null;
+  const club = serviceInfo && serviceInfo.id === CLUB.service ? clubPrice(frequency, size) : null;
+  const base = club !== null ? club : regular;
   const lines = chosen.map((extra) => ({ id: extra.id, label: extra.label, price: extra.price }));
   const afterPhotos = lines.some((line) => line.price === null);
   const total = base === null ? null : base + lines.reduce((sum, line) => sum + (line.price || 0), 0);
-  return { base, extras: lines, total, custom, afterPhotos };
+  return { base, regular, club: club !== null, extras: lines, total, custom, afterPhotos };
 }
 
 export const money = (n) => '$' + Number(n).toLocaleString('en-US');
@@ -145,7 +171,8 @@ export function buildRequest(state) {
     'Extras: ' + extraText,
     'Last detailed: ' + (label(LAST_CLEANED, state.lastCleaned) || 'not answered'),
     'Requested: ' + dayText + ' · ' + label(WINDOWS, state.window),
-    'How often: ' + (label(FREQUENCIES, state.frequency) || 'not answered'),
+    'How often: ' + (label(FREQUENCIES, state.frequency) || 'not answered') + (clubSchedule(state.frequency) ? ' (interested in Tuff Club)' : ''),
+    est.club ? 'Tuff Club price applied: ' + money(est.base) + ' per visit (regular ' + money(est.regular) + '), ' + CLUB.minVisits + '-visit minimum accepted' : '',
     'Policy accepted: $' + POLICY.deposit + ' deposit after confirmation, ' + POLICY.cancelHours + '-hour cancellation, $' + POLICY.extraDirt + ' per extra 30 min for heavy dirt (v' + POLICY.version + ')',
     state.notes ? 'Notes: ' + state.notes : ''
   ].filter(Boolean);

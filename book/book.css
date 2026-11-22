@@ -295,3 +295,7 @@
 .byd-agree input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--gold); flex: none; }
 .byd-agree a { color: var(--accent-text); }
 @media (max-width: 560px) { .byd-included ul { grid-template-columns: 1fr; } }
+
+.byd-club-note { margin: 12px 0 0; padding: 12px 14px; border-radius: var(--radius-sm); background: rgba(70,192,125,.1); border: 1px solid rgba(70,192,125,.4); color: var(--text); font-size: .9rem; }
+.byd-club-note strong { color: #7fe0a4; }
+.byd-club-note a, .byd-sub .optional a { color: var(--accent-text); }
