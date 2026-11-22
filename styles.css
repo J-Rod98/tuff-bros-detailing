@@ -1721,3 +1721,16 @@ summary:focus-visible {
 .guarantee-note { max-width: 760px; margin: -6px auto 30px; text-align: center; color: var(--cream); }
 .guarantee-note strong { color: var(--accent-text); }
 .price-tag { display: inline-block; align-self: flex-start; margin: 0 0 10px; padding: 3px 10px; border: 1px solid var(--line-2); border-radius: 999px; font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+
+/* Vehicle size guide and extras */
+.size-guide { max-width: 980px; margin: 0 auto 30px; padding: 18px 22px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.size-guide-title { font-size: 1.05rem; text-transform: uppercase; color: var(--cream); margin: 0 0 10px; }
+.size-guide-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 26px; }
+.size-guide-list li { display: flex; flex-direction: column; gap: 2px; font-size: .95rem; color: var(--muted); }
+.size-guide-list strong { color: var(--cream); }
+.extras-card { max-width: 980px; margin: 30px auto 0; padding: 24px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.extras-card h3 { font-size: 1.25rem; text-transform: uppercase; color: var(--cream); margin: 0 0 6px; }
+.extras-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 30px; }
+.extras-list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--line-2); color: var(--text); }
+.extras-list strong { color: var(--cream); white-space: nowrap; }
+@media (max-width: 700px) { .size-guide-list, .extras-list { grid-template-columns: 1fr; } }
