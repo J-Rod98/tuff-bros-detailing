@@ -1716,3 +1716,8 @@ summary:focus-visible {
 .gift-banner-inner { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; padding-top: 14px; padding-bottom: 14px; text-align: center; }
 .gift-banner p { margin: 0; color: var(--cream); }
 .gift-banner strong { color: var(--accent-text); }
+
+/* Missed-spot guarantee and returning-customer tags */
+.guarantee-note { max-width: 760px; margin: -6px auto 30px; text-align: center; color: var(--cream); }
+.guarantee-note strong { color: var(--accent-text); }
+.price-tag { display: inline-block; align-self: flex-start; margin: 0 0 10px; padding: 3px 10px; border: 1px solid var(--line-2); border-radius: 999px; font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
