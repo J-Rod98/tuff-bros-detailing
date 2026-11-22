@@ -22,7 +22,7 @@ export const SIZES = [
 
 export const SERVICES = [
   { id: 'full-detail', name: 'Full Detail', prices: { car: 300, suv: 350, xl: 400 }, popular: true, interior: true, exterior: true, stains: true,
-    includes: ['Seats and upholstery cleaned and conditioned', 'Carpets and floor mats deep cleaned', 'Dash, console and door panels detailed and dressed', 'Cupholders, vents, seams and crevices', 'Interior glass, streak-free', 'Careful hand wash and dry', 'Wax for shine and protection', 'Wheels, tires and trim detailed and dressed'],
+    includes: ['Seats and upholstery cleaned and conditioned', 'Carpets and floor mats deep cleaned', 'Dash, console and door panels detailed and dressed', 'Cupholders, vents, seams and crevices', 'Interior glass, streak-free', 'Careful hand wash and dry', 'Spray wax for shine and protection', 'Wheels, tires and trim detailed and dressed'],
     blurb: 'Inside and out. Our most popular first visit.' },
   { id: 'deep-interior', name: 'Deep Interior Clean', prices: { car: 180, suv: 220, xl: 270 }, interior: true, stains: true,
     includes: ['Seats and upholstery cleaned and conditioned', 'Carpets and floor mats deep cleaned', 'Dash, console and door panels detailed and dressed', 'Cupholders, vents, seams and crevices', 'Interior glass, streak-free'],
