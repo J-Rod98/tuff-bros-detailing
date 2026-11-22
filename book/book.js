@@ -1,7 +1,7 @@
 // Build Your Detail: a step-by-step request that lands in the Tuff OS quote queue.
 // Nothing here books a confirmed time or takes payment; Tuff Bros confirms by text.
 import {
-  SIZES, SERVICES, EXTRAS, LAST_CLEANED, CITIES, WINDOWS, FREQUENCIES, PHONE_SMS, PHONE_DISPLAY, POLICY,
+  SIZES, SERVICES, EXTRAS, LAST_CLEANED, CITIES, WINDOWS, FREQUENCIES, PHONE_SMS, PHONE_DISPLAY, POLICY, CLUB_RULE, clubSchedule, clubPrice,
   getSize, getService, extraFits, estimate, money, requestDays, isoDate, validPhone, buildRequest
 } from './pricing.js';
 
@@ -115,6 +115,26 @@ function renderYou() {
     service && service.excludes ? el('p', { class: 'byd-help', text: service.excludes }) : null);
 }
 
+function renderClubNote(est) {
+  renderPolicy();
+  const note = $('#bydClubNote');
+  if (!note) return;
+  const schedule = clubSchedule(state.frequency);
+  const size = getSize(state.size);
+  const price = clubPrice(state.frequency, state.size);
+  note.hidden = !schedule;
+  if (!schedule) return;
+  if (est.club) {
+    note.replaceChildren(el('strong', { text: 'Tuff Club price: ' + money(est.base) + ' a visit' }),
+      ' (regular ' + money(est.regular) + '). Stay on schedule to keep it. No minimum, and you pay after each visit. ', el('a', { href: '/tuff-club/', target: '_blank', text: 'How Tuff Club works' }));
+  } else if (price !== null) {
+    note.replaceChildren(el('strong', { text: 'Ask about Tuff Club. ' }),
+      'After this visit, a Basic In & Out ' + schedule.label.toLowerCase() + ' is ' + money(price) + ' for your ' + size.label + '. We\u2019ll go over it when we confirm. ', el('a', { href: '/tuff-club/', target: '_blank', text: 'See Tuff Club' }));
+  } else {
+    note.replaceChildren(el('strong', { text: 'Ask about Tuff Club. ' }), 'We\u2019ll quote a club price for your vehicle when we confirm. ', el('a', { href: '/tuff-club/', target: '_blank', text: 'See Tuff Club' }));
+  }
+}
+
 function renderPolicy() {
   const money0 = (n) => '$' + n;
   $('#bydPolicyList').replaceChildren(
@@ -122,7 +142,8 @@ function renderPolicy() {
     el('li', {}, el('strong', { text: 'Pet hair and sand. ' }), 'If your vehicle has them, add them as extras so we plan enough time.'),
     el('li', {}, el('strong', { text: money0(POLICY.deposit) + ' deposit. ' }), 'Once we confirm your time, we text you a link to pay a ' + money0(POLICY.deposit) + ' deposit to hold it. It comes off your total, and the rest is due after the service is complete.'),
     el('li', {}, el('strong', { text: 'Cancelling or rescheduling. ' }), 'Give us at least ' + POLICY.cancelHours + ' hours\u2019 notice and your deposit is refunded or moved to your new day. With less notice, the deposit is kept. If we reschedule for weather, your deposit moves with you.'),
-    el('li', {}, el('strong', { text: 'Missed a spot? ' }), 'Tell us within 24 hours and we come back and clean it, free.'));
+    el('li', {}, el('strong', { text: 'Missed a spot? ' }), 'Tell us within 24 hours and we come back and clean it, free.'),
+    clubSchedule(state.frequency) ? el('li', {}, el('strong', { text: 'Tuff Club. ' }), CLUB_RULE) : null);
 }
 
 function summaryRows() {
@@ -131,7 +152,7 @@ function summaryRows() {
   const est = estimate(state);
   const rows = [];
   if (size) rows.push(['Vehicle', size.label, '']);
-  if (service) rows.push(['Service', service.name, est.custom ? 'Quote' : est.base !== null ? money(est.base) : '']);
+  if (service) rows.push(['Service', service.name + (est.club ? ' (Tuff Club)' : ''), est.custom ? 'Quote' : est.base !== null ? money(est.base) : '']);
   est.extras.forEach((extra) => rows.push(['Extra', extra.label, extra.price === null ? 'Photos' : '+' + money(extra.price)]));
   if (state.date) rows.push(['Requested', new Date(state.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + (state.window ? ' · ' + WINDOWS.find((w) => w.id === state.window).label : ''), '']);
   return { rows, est };
@@ -156,6 +177,7 @@ function renderSummary() {
   $('#bydBarTotal').textContent = text;
   $('#bydTotalLabel').textContent = est.custom ? 'Price' : 'Starting price';
   $('#bydPhotoNote').hidden = !est.afterPhotos && !est.custom;
+  renderClubNote(est);
   const review = $('#bydReview');
   if (review) review.replaceChildren(...rows.map(([term, value, price]) => el('li', {}, el('span', { text: term + ': ' + value }), price ? el('b', { text: price }) : null)),
     el('li', { class: 'byd-review-total' }, el('span', { text: est.custom ? 'Price' : 'Starting price' }), el('b', { text: text })));
@@ -348,6 +370,7 @@ form.querySelectorAll('.byd-progress button').forEach((button) => {
     $('#bydReturning').checked = true;
   }
   if (getSize(size)) state.size = size;
+  if (clubSchedule(params.get('club'))) state.frequency = params.get('club');
   if (getService(service)) state.service = service;
   renderSizes();
   renderServices();
