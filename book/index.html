@@ -29,7 +29,7 @@
   gtag('config', 'G-30PYXCXW4W');
 </script>
 <link rel="stylesheet" href="/styles.css?v=17-speed-contrast">
-<link rel="stylesheet" href="/book/book.css?v=1">
+<link rel="stylesheet" href="/book/book.css?v=2">
 <link rel="preload" href="/book/img/size-car.webp" as="image">
 <script type="application/ld+json">
 {
@@ -83,7 +83,7 @@
     <p class="lead">Pick your vehicle and service, watch your price as you go, then request a day. We confirm by text and come to you.</p>
     <ul class="byd-promises">
       <li>Price up front</li>
-      <li>No payment now</li>
+      <li>No payment to request</li>
       <li>Missed a spot? We come back free</li>
     </ul>
   </div>
@@ -182,8 +182,14 @@
           <div class="byd-review">
             <h3>Your request</h3>
             <ul id="bydReview"></ul>
-            <p class="byd-help">No payment now. We text you to confirm your time and final price. By sending, you agree to our <a href="/terms/">service terms</a>.</p>
           </div>
+          <div class="byd-included" id="bydIncluded"></div>
+          <div class="byd-policy" id="bydPolicy">
+            <h3>Before you book</h3>
+            <ul id="bydPolicyList"></ul>
+            <label class="byd-agree"><input type="checkbox" id="bydAgree" name="agree" required><span>I&rsquo;ve read this and agree to the deposit and cancellation policy and the <a href="/terms/">service terms</a>.</span></label>
+          </div>
+          <p class="byd-help">No payment now. We text you to confirm your time and final price.</p>
         </fieldset>
 
         <p class="form-error byd-error" id="bydError" role="alert" hidden></p>
@@ -201,7 +207,8 @@
           <strong id="bydTotal" aria-live="polite">Pick a vehicle</strong>
         </div>
         <p class="byd-fine" id="bydPhotoNote" hidden>Some items are priced after we see photos.</p>
-        <p class="byd-fine">Final price is confirmed from your photos. No payment now.</p>
+        <p class="byd-fine">A starting price, not a final quote. We confirm the final price from your photos and when we arrive.</p>
+        <p class="byd-fine">No payment now. A $25 deposit holds your time once we confirm it.</p>
         <p class="byd-promise"><strong>Our promise:</strong> if we missed something, tell us within 24 hours and we&rsquo;ll come back and clean it, free.</p>
       </aside>
     </div>
@@ -215,8 +222,8 @@
       <h3>What happens next</h3>
       <ol class="byd-next-steps">
         <li><strong>Text us 2 to 4 photos</strong> of the inside and outside. This locks in your price.</li>
-        <li><strong>We text you</strong> to confirm your time and final price.</li>
-        <li><strong>We come to you</strong> with our own equipment and water.</li>
+        <li><strong>We text you</strong> to confirm your time and price, with a link for the $25 deposit to hold it.</li>
+        <li><strong>We come to you</strong> with our own equipment and water. The rest is due after the service is complete.</li>
       </ol>
       <a class="btn btn-primary btn-lg" id="bydSms" href="sms:+15015004306">Text My Photos</a>
       <p class="byd-help">Or call <a href="tel:+15015004306">(501) 500-4306</a>.</p>
@@ -298,9 +305,8 @@
       <p>&copy; <span id="year"></span> Tuff Bros Mobile Detailing &mdash; Little Rock &amp; North Little Rock, AR <span class="footer-legal"><a href="/privacy/">Privacy Policy</a></span></p>
     </div>
   </div>
-</footer>
 <script src="/os-client.js?v=4" defer></script>
 <script src="/script.js?v=13"></script>
-<script type="module" src="/book/book.js?v=1"></script>
+<script type="module" src="/book/book.js?v=2"></script>
 </body>
 </html>

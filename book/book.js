@@ -1,7 +1,7 @@
 // Build Your Detail: a step-by-step request that lands in the Tuff OS quote queue.
 // Nothing here books a confirmed time or takes payment; Tuff Bros confirms by text.
 import {
-  SIZES, SERVICES, EXTRAS, LAST_CLEANED, CITIES, WINDOWS, FREQUENCIES, PHONE_SMS, PHONE_DISPLAY,
+  SIZES, SERVICES, EXTRAS, LAST_CLEANED, CITIES, WINDOWS, FREQUENCIES, PHONE_SMS, PHONE_DISPLAY, POLICY,
   getSize, getService, extraFits, estimate, money, requestDays, isoDate, validPhone, buildRequest
 } from './pricing.js';
 
@@ -9,7 +9,7 @@ const ENDPOINT = '/.netlify/functions/os-event';
 const STEPS = 5;
 const $ = (sel, root = document) => root.querySelector(sel);
 const form = $('#byd');
-const state = { size: '', service: '', extras: [], lastCleaned: '', city: '', otherCity: '', street: '', zip: '', date: '', window: '', returning: false, frequency: '', name: '', phone: '', email: '', vehicle: '', notes: '' };
+const state = { size: '', service: '', extras: [], lastCleaned: '', city: '', otherCity: '', street: '', zip: '', date: '', window: '', returning: false, agree: false, frequency: '', name: '', phone: '', email: '', vehicle: '', notes: '' };
 let step = 1;
 let sending = false;
 
@@ -60,7 +60,12 @@ function renderServices() {
         el('span', { class: 'byd-price', text: priceText(service) })),
       el('span', { class: 'byd-option-body', text: service.blurb }),
       service.popular ? el('span', { class: 'byd-tag', text: 'Most popular' }) : null,
-      service.maintenance ? el('span', { class: 'byd-tag byd-tag-muted', text: 'Returning customers' }) : null))));
+      service.maintenance ? el('span', { class: 'byd-tag byd-tag-muted', text: 'Returning customers' }) : null,
+      el('span', { class: 'byd-includes' },
+        el('span', { class: 'byd-includes-title', text: 'What\u2019s included' }),
+        el('span', { class: 'byd-includes-list' }, ...service.includes.map((item) => el('span', { text: item }))),
+        service.excludes ? el('span', { class: 'byd-includes-note', text: service.excludes }) : null),
+      ))));
   $('#bydMaintNote').hidden = state.returning;
 }
 
@@ -103,6 +108,21 @@ function renderWhen() {
 
 function renderYou() {
   $('#bydFreq').replaceChildren(...chips('frequency', FREQUENCIES));
+  const service = getService(state.service);
+  $('#bydIncluded').replaceChildren(
+    el('h3', { text: 'What\u2019s included in your ' + (service ? service.name : 'service') }),
+    el('ul', {}, ...(service ? service.includes : []).map((item) => el('li', { text: item }))),
+    service && service.excludes ? el('p', { class: 'byd-help', text: service.excludes }) : null);
+}
+
+function renderPolicy() {
+  const money0 = (n) => '$' + n;
+  $('#bydPolicyList').replaceChildren(
+    el('li', {}, el('strong', { text: 'Starting prices. ' }), 'Prices are for a vehicle in normal, everyday condition. We look it over when we arrive. Heavy dirt, mud or buildup is ' + money0(POLICY.extraDirt) + ' per extra 30 minutes, and we go over any change with you before we start.'),
+    el('li', {}, el('strong', { text: 'Pet hair and sand. ' }), 'If your vehicle has them, add them as extras so we plan enough time.'),
+    el('li', {}, el('strong', { text: money0(POLICY.deposit) + ' deposit. ' }), 'Once we confirm your time, we text you a link to pay a ' + money0(POLICY.deposit) + ' deposit to hold it. It comes off your total, and the rest is due after the service is complete.'),
+    el('li', {}, el('strong', { text: 'Cancelling or rescheduling. ' }), 'Give us at least ' + POLICY.cancelHours + ' hours\u2019 notice and your deposit is refunded or moved to your new day. With less notice, the deposit is kept. If we reschedule for weather, your deposit moves with you.'),
+    el('li', {}, el('strong', { text: 'Missed a spot? ' }), 'Tell us within 24 hours and we come back and clean it, free.'));
 }
 
 function summaryRows() {
@@ -186,6 +206,7 @@ function problem(n) {
     if (!validPhone(state.phone)) return 'Enter a mobile number we can text.';
     if (state.email && !/^\S+@\S+\.\S+$/.test(state.email)) return 'Check your email, or leave it blank.';
     if (!state.vehicle.trim()) return 'Enter the year, make and model.';
+    if (!state.agree) return 'Please read Before you book and tick the box.';
   }
   return '';
 }
@@ -275,6 +296,7 @@ form.addEventListener('change', (event) => {
     setTimeout(() => { if (step === 1 && !problem(1)) showStep(2); }, 260);
     return;
   }
+  if (t.id === 'bydAgree') { state.agree = t.checked; return; }
   if (t.id === 'bydReturning') {
     state.returning = t.checked;
     const svc = getService(state.service);
@@ -329,6 +351,7 @@ form.querySelectorAll('.byd-progress button').forEach((button) => {
   if (getService(service)) state.service = service;
   renderSizes();
   renderServices();
+  renderPolicy();
   showStep(state.size ? 2 : 1, false);
   document.documentElement.classList.add('byd-ready');
 })();

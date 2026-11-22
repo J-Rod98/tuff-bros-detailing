@@ -69,3 +69,14 @@ test('other city goes into the address', () => {
   const p = buildRequest({ size: 'car', service: 'deep-interior', extras: [], city: 'Other', otherCity: 'Searcy', street: '1 Main', zip: '', date: '', window: '', name: 'A', phone: '5015550100', vehicle: 'Civic', notes: '' });
   assert.equal(p.serviceAddress, '1 Main, Searcy, AR');
 });
+
+test('every service lists what is included', async () => {
+  for (const s of SERVICES) assert.ok(Array.isArray(s.includes) && s.includes.length >= 4, s.name);
+});
+
+test('request records the accepted booking policy', async () => {
+  const { POLICY } = await import('../book/pricing.js');
+  assert.deepEqual([POLICY.deposit, POLICY.cancelHours, POLICY.extraDirt], [25, 24, 50]);
+  const p = buildRequest({ size: 'car', service: 'full-detail', extras: [], city: 'Benton', street: '1 A St', date: '', window: '', name: 'A', phone: '5015550100', vehicle: 'Civic', notes: '' });
+  assert.match(p.message, /Policy accepted: \$25 deposit after confirmation, 24-hour cancellation, \$50 per extra 30 min/);
+});

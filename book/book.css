@@ -271,3 +271,27 @@
   .byd-size-card, .byd-option-card, .byd-chip span, .byd-day > span { transition: none; }
   .byd-size:hover .byd-size-card { transform: none; }
 }
+
+/* What's included (shown on the selected service) */
+.byd-includes { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line-2); }
+.byd-radio:checked + .byd-option-card .byd-includes { display: block; }
+.byd-includes-title { display: block; color: var(--cream); font-weight: 700; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+.byd-includes-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 18px; }
+.byd-includes-list span { position: relative; padding-left: 20px; color: var(--text); font-size: .88rem; line-height: 1.35; }
+.byd-includes-list span::before { content: "\2713"; position: absolute; left: 0; color: var(--accent-text); font-weight: 800; }
+.byd-includes-note { display: block; margin-top: 10px; color: var(--muted); font-size: .82rem; }
+@media (max-width: 560px) { .byd-includes-list { grid-template-columns: 1fr; } }
+
+.byd-included, .byd-policy { margin-top: 18px; padding: 18px 20px; border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--bg-alt); }
+.byd-included h3, .byd-policy h3 { margin: 0 0 10px; font-family: var(--font-body); font-size: 1rem; color: var(--cream); text-transform: none; letter-spacing: 0; }
+.byd-included ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 18px; }
+.byd-included li { position: relative; padding-left: 20px; color: var(--text); font-size: .9rem; }
+.byd-included li::before { content: "\2713"; position: absolute; left: 0; color: var(--accent-text); font-weight: 800; }
+.byd-included .byd-help { margin: 10px 0 0; }
+.byd-policy { border-color: rgba(210,31,38,.45); }
+.byd-policy ul { margin: 0 0 14px; padding-left: 18px; display: grid; gap: 8px; color: var(--text); font-size: .9rem; }
+.byd-policy li strong { color: var(--cream); }
+.byd-agree { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; color: var(--cream); font-weight: 600; font-size: .92rem; }
+.byd-agree input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--gold); flex: none; }
+.byd-agree a { color: var(--accent-text); }
+@media (max-width: 560px) { .byd-included ul { grid-template-columns: 1fr; } }

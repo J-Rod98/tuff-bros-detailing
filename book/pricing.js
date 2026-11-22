@@ -4,6 +4,15 @@
 export const PHONE_DISPLAY = '(501) 500-4306';
 export const PHONE_SMS = '+15015004306';
 
+// Booking policy shown before sending. Keep in step with /terms/.
+export const POLICY = {
+  version: '2026-11-22',
+  deposit: 25,
+  cancelHours: 24,
+  extraDirt: 50, // per extra 30 minutes
+  petHair: 55
+};
+
 export const SIZES = [
   { id: 'car', label: 'Car', hint: 'Sedans, coupes and hatchbacks', examples: 'Camry, Civic, Accord, Mustang', img: '/book/img/size-car.webp' },
   { id: 'suv', label: 'SUV / Truck', hint: 'Crossovers, mid-size SUVs and standard pickups', examples: 'RAV4, CR-V, Explorer, F-150', img: '/book/img/size-suv.webp' },
@@ -13,16 +22,27 @@ export const SIZES = [
 
 export const SERVICES = [
   { id: 'full-detail', name: 'Full Detail', prices: { car: 300, suv: 350, xl: 400 }, popular: true, interior: true, exterior: true, stains: true,
+    includes: ['Seats and upholstery cleaned and conditioned', 'Carpets and floor mats deep cleaned', 'Dash, console and door panels detailed and dressed', 'Cupholders, vents, seams and crevices', 'Interior glass, streak-free', 'Careful hand wash and dry', 'Wax for shine and protection', 'Wheels, tires and trim detailed and dressed'],
     blurb: 'Inside and out. Our most popular first visit.' },
   { id: 'deep-interior', name: 'Deep Interior Clean', prices: { car: 180, suv: 220, xl: 270 }, interior: true, stains: true,
+    includes: ['Seats and upholstery cleaned and conditioned', 'Carpets and floor mats deep cleaned', 'Dash, console and door panels detailed and dressed', 'Cupholders, vents, seams and crevices', 'Interior glass, streak-free'],
+    excludes: 'Exterior wash not included.',
     blurb: 'Seats, carpets, mats and every cabin surface.' },
   { id: 'wash-clay-seal', name: 'Wash, Clay & Seal', prices: { car: 199, suv: 249, xl: 299 }, exterior: true,
+    includes: ['Hand wash', 'Wheels and tires', 'Iron decontamination as needed', 'Clay bar treatment', 'Paint sealant', 'Tire dressing', 'Exterior glass'],
+    excludes: 'Exterior only. Polishing, paint correction and ceramic coating are separate.',
     blurb: 'Hand wash, clay and paint sealant for smooth, protected paint. Exterior only.' },
   { id: 'basic-in-out', name: 'Basic In & Out', prices: { car: 150, suv: 180, xl: 230 }, maintenance: true, interior: true, exterior: true,
+    includes: ['Interior vacuum and wipe-down', 'Cupholders and interior glass', 'Hand wash, wheels and tires', 'Tire dressing and exterior glass', 'Spray wax'],
+    excludes: 'No shampooing, extraction or stain treatment.',
     blurb: 'Maintenance wash, vacuum and wipe-down.' },
   { id: 'quick-interior', name: 'Quick Interior Clean', prices: { car: 80, suv: 100, xl: 150 }, maintenance: true, interior: true,
+    includes: ['Vacuum', 'Wipe-down', 'Cupholders', 'Interior glass'],
+    excludes: 'No shampooing, extraction or stain treatment. Heavy pet hair and sand are extra.',
     blurb: 'Vacuum, wipe-down, cupholders and glass.' },
   { id: 'basic-wash-wax', name: 'Basic Wash & Wax', prices: { car: 75, suv: 95, xl: 145 }, maintenance: true, exterior: true,
+    includes: ['Hand wash', 'Wheels and tires', 'Tire dressing', 'Exterior glass', 'Spray wax'],
+    excludes: 'Traditional paste wax is an extra.',
     blurb: 'Hand wash, wheels, tires and spray wax.' }
 ];
 
@@ -126,6 +146,7 @@ export function buildRequest(state) {
     'Last detailed: ' + (label(LAST_CLEANED, state.lastCleaned) || 'not answered'),
     'Requested: ' + dayText + ' · ' + label(WINDOWS, state.window),
     'How often: ' + (label(FREQUENCIES, state.frequency) || 'not answered'),
+    'Policy accepted: $' + POLICY.deposit + ' deposit after confirmation, ' + POLICY.cancelHours + '-hour cancellation, $' + POLICY.extraDirt + ' per extra 30 min for heavy dirt (v' + POLICY.version + ')',
     state.notes ? 'Notes: ' + state.notes : ''
   ].filter(Boolean);
   const has = (id) => est.extras.some((e) => e.id === id);
