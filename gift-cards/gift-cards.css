@@ -1,0 +1,100 @@
+/* Gift card page and printable certificate */
+.gift-promises {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin: 26px 0 0;
+  padding: 0;
+  color: var(--cream);
+  font-weight: 600;
+}
+.gift-promises li::before { content: "\2713"; color: var(--accent-text); margin-right: 8px; }
+
+.gift-grid .price-card { position: relative; }
+.gift-grid .price-card .btn { margin-top: auto; }
+.gift-amount {
+  font-family: "Barlow Condensed", "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--cream);
+  margin: 0 0 12px;
+}
+.gift-grid .price-note { margin-bottom: 20px; }
+.gift-fineprint { margin-top: 26px; font-size: .95rem; }
+
+.gift-thanks-hero { padding-bottom: 40px; }
+.gift-cert-section { padding: 48px 0 72px; }
+.gift-status { text-align: center; color: var(--text); font-size: 1.1rem; }
+.gift-status-error { color: var(--accent-text); }
+
+.gift-cert {
+  max-width: 720px;
+  margin: 0 auto;
+  background: #fff;
+  color: #17171c;
+  border-radius: 14px;
+  border: 3px solid #d21f26;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+  padding: 32px 36px;
+}
+.gift-cert-top { display: flex; align-items: center; gap: 18px; border-bottom: 1px solid #e4dfd5; padding-bottom: 20px; }
+.gift-cert-logo { width: 72px; height: 72px; border-radius: 50%; }
+.gift-cert-kicker { margin: 0; text-transform: uppercase; letter-spacing: .14em; font-size: .8rem; color: #d21f26; font-weight: 700; }
+.gift-cert-biz { margin: 2px 0 0; font-family: "Barlow Condensed", "Inter", sans-serif; font-weight: 700; font-size: 1.6rem; text-transform: uppercase; }
+.gift-cert-value {
+  margin: 0 0 0 auto;
+  font-family: "Barlow Condensed", "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 3.4rem;
+  line-height: 1;
+  color: #d21f26;
+}
+.gift-cert-lines { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0 0; }
+.gift-cert-lines dt { text-transform: uppercase; letter-spacing: .1em; font-size: .75rem; color: #55504a; }
+.gift-cert-lines dd { margin: 4px 0 0; font-size: 1.25rem; font-weight: 600; border-bottom: 1px solid #e4dfd5; padding-bottom: 6px; }
+.gift-cert-message { margin: 20px 0 0; font-style: italic; font-size: 1.1rem; color: #2a2a30; }
+.gift-cert-bottom { display: flex; gap: 24px; align-items: flex-end; margin-top: 26px; padding-top: 20px; border-top: 1px dashed #c9c2b5; }
+.gift-cert-label { margin: 0; text-transform: uppercase; letter-spacing: .1em; font-size: .75rem; color: #55504a; }
+.gift-cert-code { margin: 4px 0 0; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 1.5rem; font-weight: 700; letter-spacing: .08em; }
+.gift-cert-redeem { margin-left: auto; text-align: right; font-size: .92rem; color: #2a2a30; }
+.gift-cert-redeem p { margin: 0 0 4px; }
+.gift-cert-actions { margin-top: 30px; }
+
+@media (max-width: 640px) {
+  .gift-cert { padding: 24px 20px; }
+  .gift-cert-top { flex-wrap: wrap; }
+  .gift-cert-value { margin-left: 0; width: 100%; }
+  .gift-cert-lines { grid-template-columns: 1fr; }
+  .gift-cert-bottom { flex-direction: column; align-items: flex-start; }
+  .gift-cert-redeem { margin-left: 0; text-align: left; }
+}
+
+@media print {
+  .skip-link, .sticky-cta, .site-header, .site-footer, .gift-thanks-hero, .gift-cert-actions, .gift-status,
+  #tuff-os-chat { display: none !important; }
+  body { background: #fff !important; }
+  .gift-cert-section { padding: 0; }
+  .gift-cert { box-shadow: none; margin: 0 auto; }
+}
+
+/* Four gift options in one row on wide screens */
+@media (min-width: 1000px) { .pricing-grid.gift-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 640px) and (max-width: 999px) { .pricing-grid.gift-grid { grid-template-columns: repeat(2, 1fr); } }
+.gift-cert-code { white-space: nowrap; }
+.gift-cert-bottom > div:first-child { flex: none; }
+.gift-cert-logo { background: #0c0c0f; padding: 4px; }
+
+.gift-area {
+  max-width: 760px;
+  margin: 28px auto 0;
+  padding: 14px 18px;
+  text-align: center;
+  color: var(--cream);
+  background: var(--red-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.gift-area strong { color: var(--accent-text); }
+.gift-area a { color: var(--cream); text-decoration: underline; }

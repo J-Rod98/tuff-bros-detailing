@@ -45,3 +45,11 @@
   from = "/odor-removal-car-detailing-light-rock-ar"
   to = "/odor-removal-car-detailing-little-rock-ar/"
   status = 301
+
+# Gift certificate pages carry a checkout session ID; keep them private and uncached.
+[[headers]]
+  for = "/gift-cards/thank-you/*"
+  [headers.values]
+    Cache-Control = "private, no-store"
+    Referrer-Policy = "no-referrer"
+    X-Robots-Tag = "noindex, nofollow, noarchive"

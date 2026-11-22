@@ -1708,3 +1708,11 @@ summary:focus-visible {
 }
 .footer-col a.btn-primary,
 .footer-contact a.btn-primary { color: #fff; }
+
+/* =========================================================
+   Holiday gift card banner (homepage)
+   ========================================================= */
+.gift-banner { background: var(--red-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.gift-banner-inner { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; padding-top: 14px; padding-bottom: 14px; text-align: center; }
+.gift-banner p { margin: 0; color: var(--cream); }
+.gift-banner strong { color: var(--accent-text); }
